@@ -2,6 +2,9 @@
 
 Similar to git-labelmaker and git-label. Except this is a probot app that, on push to certain files in the '.github' folder, will read those files and add those labels to the repo.
 
+## Resources
+
+[GitHub Labels API V3](https://developer.github.com/v3/issues/labels/#update-a-label)
 
 ## Features
 
