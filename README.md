@@ -1,6 +1,6 @@
 # Probot Labels
 
-Similar to git-labelmaker and git-label. Except this is a probot app that, on push to certain files in the '.github' folder, will read those files and add those labels to the repo.
+Probot-Labels makes managing your project's GitHub labels easy and hassle-free.
 
 ## Resources
 
