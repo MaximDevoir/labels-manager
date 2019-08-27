@@ -81,7 +81,6 @@ export = (app: Application): void => {
 
     app.log('tree', tree)
 
-    app.log('attempting')
     const labels = await getLabels(context, owner, repo)
 
     if (!labels) {
