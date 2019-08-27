@@ -6,18 +6,18 @@ function isMasterBranch(ref: string): boolean {
 
 type Label = {
   color: string
-  default: boolean
+  default?: boolean
+  description: string
   id: string
   name: string
-  node_id: string
-  url: string
+  url?: string
 }
 
 async function getLabels(
   client: Context,
   owner: string,
   repo: string
-): Promise<Pick<Label, 'name' | 'id'>[] | null> {
+): Promise<Label[] | null> {
   const  result = await client.github.graphql(
     `query Labels($repo: String!, $owner: String!) {
       repository(name: $repo, owner: $owner) {
@@ -42,7 +42,7 @@ async function getLabels(
     return null
   }
 
-  const labels = (result as any)
+  const labels: Label[] = (result as any).repository.labels.nodes
   return labels
 }
 
@@ -88,7 +88,19 @@ export = (app: Application): void => {
       return context.log('Error while retrieving labels.')
     }
 
-    context.log('labels', labels)
+    const currentLabelCache : {
+      [key: string]: Label
+    } = {}
+
+    labels.forEach(label => {
+      currentLabelCache[label.name] = {
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        description: label.description
+      }
+    })
+    context.log('currentLabelCache', currentLabelCache)
   })
   // For more information on building apps:
   // https://probot.github.io/docs/
