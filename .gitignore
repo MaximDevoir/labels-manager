@@ -6,3 +6,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 debug.log
+
+# Environment files
+.env
+
+# Compiled Probot app
+lib
