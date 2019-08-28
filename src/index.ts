@@ -1,30 +1,36 @@
 import { Application } from 'probot'
 import Labels from './Labels';
 
-function isMasterBranch(ref: string): boolean {
-  return ref === 'refs/heads/master'
+import { WebhookPayloadPush } from '@octokit/webhooks'
+
+function onDefaultBranch(payload: WebhookPayloadPush): boolean {
+  const { default_branch: defaultBranch } = payload.repository
+  if (payload.ref === `refs/heads/${defaultBranch}`) {
+    return true
+  }
+
+  return false
 }
 
 export = (app: Application): void => {
-  // TODO: Process repo on app installation
   app.on('push', async context => {
     const {
       after: commitHash,
       repository: {
         name: repo,
-        owner: { name: owner }
+        owner: { name: owner },
+        default_branch: defaultBranch
       }
     } = context.payload
 
-    const onMaster = isMasterBranch(context.payload.ref)
+    const onMaster = onDefaultBranch(context.payload)
 
     if (!owner) {
-      app.log('could not find an owner.')
-      return
+      throw "This is strange. We did not find an owner for this repository."
     }
 
     if (!onMaster) {
-      app.log('not on master, leaving')
+      app.log('Push event occurred on a non-default branch. Goodbye.')
       return
     }
 
@@ -39,9 +45,13 @@ export = (app: Application): void => {
       recursive: 1
     })
 
-    app.log('tree', tree)
+    // app.log('tree', tree)
 
     const labels = new Labels(context, owner, repo)
+
+    context.log('getLabels', labels.getLabels())
+
+    context.log('here')
   })
   // For more information on building apps:
   // https://probot.github.io/docs/
