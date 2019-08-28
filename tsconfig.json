@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
     "outDir": "dist",
     "allowJs": false,
     "lib": ["es2015", "es2017"],
@@ -29,7 +28,7 @@
     "coverage",
     "node_modules",
     "dist",
-    "./src/**/*.spec.ts"
+    "typings"
   ],
   "compileOnSave": false
 }
