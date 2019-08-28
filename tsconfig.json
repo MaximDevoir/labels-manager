@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "allowJs": false,
     "lib": ["es2015", "es2017"],
@@ -20,15 +21,14 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "typings/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "coverage",
     "node_modules",
     "dist",
-    "typings"
+    "typings",
+    "test"
   ],
   "compileOnSave": false
 }
