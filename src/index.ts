@@ -1,53 +1,12 @@
-import { Application, Context } from 'probot'
+import { Application } from 'probot'
+import Labels from './Labels';
 
 function isMasterBranch(ref: string): boolean {
   return ref === 'refs/heads/master'
 }
 
-type Label = {
-  color: string
-  default?: boolean
-  description: string
-  id: string
-  name: string
-  url?: string
-}
-
-async function getLabels(
-  client: Context,
-  owner: string,
-  repo: string
-): Promise<Label[] | null> {
-  const  result = await client.github.graphql(
-    `query Labels($repo: String!, $owner: String!) {
-      repository(name: $repo, owner: $owner) {
-        labels(first: 100) {
-          nodes {
-            id
-            name
-            description
-            color
-          }
-        }
-      }
-    }
-  `,
-    {
-      repo,
-      owner
-    }
-  )
-
-  if (result.errors) {
-    return null
-  }
-
-  const labels: Label[] = (result as any).repository.labels.nodes
-  return labels
-}
-
-
 export = (app: Application): void => {
+  // TODO: Process repo on app installation
   app.on('push', async context => {
     const {
       after: commitHash,
@@ -75,31 +34,14 @@ export = (app: Application): void => {
     } = await context.github.git.getTree({
       owner,
       repo,
+      // eslint-disable-next-line @typescript-eslint/camelcase
       tree_sha: commitHash,
       recursive: 1
     })
 
     app.log('tree', tree)
 
-    const labels = await getLabels(context, owner, repo)
-
-    if (!labels) {
-      return context.log('Error while retrieving labels.')
-    }
-
-    const currentLabelCache : {
-      [key: string]: Label
-    } = {}
-
-    labels.forEach(label => {
-      currentLabelCache[label.name] = {
-        id: label.id,
-        name: label.name,
-        color: label.color,
-        description: label.description
-      }
-    })
-    context.log('currentLabelCache', currentLabelCache)
+    const labels = new Labels(context, owner, repo)
   })
   // For more information on building apps:
   // https://probot.github.io/docs/
