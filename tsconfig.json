@@ -21,7 +21,9 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "typings/**/*.ts"
   ],
   "exclude": [
     "coverage",
