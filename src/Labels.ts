@@ -1,5 +1,12 @@
 import { Context } from 'probot'
 
+type Pagination = {
+  startCursor: string;
+  endCursor: string;
+  hasNextPage: Boolean | null;
+  hasPreviousPage: Boolean | null;
+}
+
 type Label = {
   id: string;
   cursor: string;
@@ -23,7 +30,12 @@ export default class Labels {
    */
   private limit = 256
   private _labels: LabelCollection = {}
-  private endCursor: string | null = null
+  private _pageInfo: Pagination = {
+    startCursor: "",
+    endCursor: "",
+    hasNextPage: false,
+    hasPreviousPage: false
+  }
 
   constructor(private context: Context, private owner: string, private repo: string) {
 
@@ -40,28 +52,20 @@ export default class Labels {
     this._labels = Object.assign({}, this.labels, labels)
   }
 
+  /**
+   * Pagination information from the instance of the last `fired` query.
+   *
+   * @memberof Labels
+   */
+  get pageInfo() {
+    return this._pageInfo
+  }
+
+  set pageInfo(info: Pagination) {
+    this._pageInfo = info
+  }
+
   private async getLabels(cursor?: string | null) {
     const after = typeof cursor === 'string' || null
-
   }
-}
-
-async function getLabels(
-  client: Context,
-  owner: string,
-  repo: string
-): Promise<Label[] | null> {
-  const  result = await client.github.graphql(``,
-    {
-      repo,
-      owner
-    }
-  )
-
-  if (result.errors) {
-    return null
-  }
-
-  const labels: Label[] = (result as any).repository.labels.nodes
-  return labels
 }
