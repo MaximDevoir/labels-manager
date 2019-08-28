@@ -60,7 +60,7 @@ export default class Labels {
    *
    * @memberof Labels
    */
-  get pageInfo() {
+  get pageInfo(): Pagination {
     return this._pageInfo
   }
 
@@ -74,7 +74,7 @@ export default class Labels {
    *
    * @memberof Labels
    */
-  get totalCount() {
+  get totalCount(): number | null {
     return this._totalCount
   }
 
@@ -82,7 +82,7 @@ export default class Labels {
     this._totalCount = total
   }
 
-  async getLabels(after: string = "", limit: number = 100) {
+  async getLabels(after = "", limit = 100): Promise<GetLabels> {
     const labels = new GetLabels(this.context, this.owner, this.repo, limit, after)
 
     return labels
