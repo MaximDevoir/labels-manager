@@ -26,9 +26,7 @@
   "exclude": [
     "coverage",
     "node_modules",
-    "dist",
-    "typings",
-    "test"
+    "dist"
   ],
   "compileOnSave": false
 }
