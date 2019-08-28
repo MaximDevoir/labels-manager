@@ -12,3 +12,6 @@ debug.log
 
 # Compiled Probot app
 dist
+
+# Typescript declaration files
+typings/
