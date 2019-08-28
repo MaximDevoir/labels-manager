@@ -11,4 +11,4 @@ debug.log
 .env
 
 # Compiled Probot app
-lib
+dist
