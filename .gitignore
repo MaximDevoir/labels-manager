@@ -15,3 +15,6 @@ dist
 
 # Typescript declaration files
 typings/
+
+# Testing related directories
+coverage/
