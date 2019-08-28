@@ -3,7 +3,7 @@ import { Variables } from 'probot/lib/github';
 import { Context } from 'probot';
 
 const getLabelsQuery = `
-query GetLabels($owner: String!, $repo: String!, $after: String, $limit: Int = 100) {
+query GetLabels($owner: String!, $repo: String!, $limit: Int = 100, $after: String) {
   rateLimit {
     cost
     limit
@@ -34,8 +34,29 @@ query GetLabels($owner: String!, $repo: String!, $after: String, $limit: Int = 1
 }
 `
 
+interface QueryVariables {
+  owner: string;
+  repo: string;
+  after: string | undefined
+}
+
 class GetLabels extends Query {
-  constructor(context: Context, variables?: Variables) {
+  /**
+   * Creates an instance of GetLabels.
+   * @param {Context} context
+   * @param {string} owner
+   * @param {string} repo
+   * @param {number} limit GitHub API limits us to a maximum of 100 nodes
+   * @param {string} [after=""]
+   * @memberof GetLabels
+   */
+  constructor(context: Context, owner: string, repo: string, limit: number, after: string) {
+    const variables = {
+      owner,
+      repo,
+      limit,
+      after
+    }
     super(context, getLabelsQuery, variables)
   }
 }

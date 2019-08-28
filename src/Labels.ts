@@ -1,10 +1,12 @@
 import { Context } from 'probot'
 
+import GetLabels from './query/GetLabels'
+
 type Pagination = {
   startCursor: string;
   endCursor: string;
-  hasNextPage: Boolean | null;
-  hasPreviousPage: Boolean | null;
+  hasNextPage: boolean | null;
+  hasPreviousPage: boolean | null;
 }
 
 type Label = {
@@ -30,6 +32,7 @@ export default class Labels {
    */
   private limit = 256
   private _labels: LabelCollection = {}
+  private _totalCount: number | null = null
   private _pageInfo: Pagination = {
     startCursor: "",
     endCursor: "",
@@ -61,11 +64,27 @@ export default class Labels {
     return this._pageInfo
   }
 
-  set pageInfo(info: Pagination) {
+  set pageInfo(info) {
     this._pageInfo = info
   }
 
-  private async getLabels(cursor?: string | null) {
-    const after = typeof cursor === 'string' || null
+  /**
+   * Get the total count number of labels. This is set after the first query is
+   * fired.
+   *
+   * @memberof Labels
+   */
+  get totalCount() {
+    return this._totalCount
+  }
+
+  set totalCount(total) {
+    this._totalCount = total
+  }
+
+  async getLabels(after: string = "", limit: number = 100) {
+    const labels = new GetLabels(this.context, this.owner, this.repo, limit, after)
+
+    return labels
   }
 }
