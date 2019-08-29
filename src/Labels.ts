@@ -1,7 +1,6 @@
 import { Context } from 'probot'
 
 import GetLabels from './query/GetLabels'
-import { GraphQlQueryResponse } from 'probot/lib/github';
 
 type Pagination = {
   startCursor: string;
@@ -88,11 +87,11 @@ export default class Labels {
   async getLabels() {
     // First get labels request. We should verify this is the first request - we
     // should only run `getLabels` once.
-    const firstLabelRequest = await this.getLabelsAfter()
+    const firstLabelRequest = await this.addLabelsFrom()
 
-    { labelCount } = firstLabelRequest.repository.labels
+    const { totalCount } = firstLabelRequest.repository
 
-    console.log('firstLabelRequest', firstLabelRequest)
+    console.log('firstLabelRequest is', (firstLabelRequest as any).repository.labels.edges)
 
     return firstLabelRequest
   }
@@ -107,7 +106,7 @@ export default class Labels {
    * @returns
    * @memberof Labels
    */
-  private async getLabelsAfter(cursor = null, limit = 100) {
+  private async addLabelsFrom(cursor = null, limit = 100) {
     const labels = await new GetLabels(this.context, this.owner, this.repo, limit, cursor).fire()
 
     return labels

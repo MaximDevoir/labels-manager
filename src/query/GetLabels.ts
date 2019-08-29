@@ -34,13 +34,45 @@ query GetLabels($owner: String!, $repo: String!, $limit: Int = 100, $after: Stri
 }
 `
 
+type Label = {
+  id: string;
+  cursor: string;
+  name: string;
+  description: string;
+  color: string;
+  default?: boolean;
+  url?: string;
+}
+
+export interface ResponseInterface {
+  repository: {
+    pageInfo: PageInfo
+    totalCount: number
+    labels: {
+      edges: LabelEdge[]
+    }
+  }
+}
+
+interface LabelEdge {
+  cursor: string
+  label: Label
+}
+
+interface PageInfo {
+  startCursor: string | null
+  endCursor: string | null
+  hasPreviousPage: boolean
+  hasNextPage: boolean
+}
+
 interface QueryVariables {
   owner: string;
   repo: string;
   after: string | null
 }
 
-class GetLabels extends Query {
+class GetLabels extends Query<ResponseInterface> {
   /**
    * Creates an instance of GetLabels.
    * @param {Context} context

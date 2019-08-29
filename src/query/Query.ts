@@ -1,7 +1,7 @@
-import { Variables, Headers } from 'probot/lib/github'
+import { Variables, Headers, GraphQlQueryResponse, GraphQLError } from 'probot/lib/github'
 import { Context } from 'probot';
 
-abstract class Query {
+abstract class Query<IResponse> {
   protected queryErrored: boolean = false
 
   /**
@@ -18,18 +18,21 @@ abstract class Query {
 
   }
 
-  async fire() {
+  fire() {
     console.log('firing query')
     const { graphql } = this.context.github
+    const response = graphql(this.query, this.variables) as any as Promise<IResponse>
 
-    const response = await graphql(this.query, this.variables)
+    response.catch(res => {
+      console.log('errors occurred', res)
+    })
 
-    if (response.errors) {
-      // TODO: Securely log errors and remove variables.
-      throw `Encountered an error with a query. ID of the query's context is ${this.context.id}`
-    }
+    // if (response.errors) {
+    //   // TODO: Securely log errors and remove variables.
+    //   throw `Encountered an error with a query. ID of the query's context is ${this.context.id}`
+    // }
 
-    return response
+    return response.then(res => res)
   }
 }
 
