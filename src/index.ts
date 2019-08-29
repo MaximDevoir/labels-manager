@@ -44,8 +44,6 @@ export = (app: Application): void => {
       recursive: 1
     })
 
-    const x = context.github.issues.listLabelsForRepo()
-
     // const newStatus = await context.github.repos.createStatus({
     //   state: 'error',
     //   context: 'labels-manager',
@@ -59,7 +57,6 @@ export = (app: Application): void => {
     const labels = new Labels(context, owner, repo)
 
     const labelList = await labels.getLabels()
-    console.log('shouldnt get here if query fails', typeof labelList)
 
     context.log('End of push event')
   })
