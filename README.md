@@ -9,3 +9,5 @@ View the [spec](spec.md).
 ## Resources
 
 [GitHub Labels API V3](https://developer.github.com/v3/issues/labels/#update-a-label)
+
+[Octokit API Reference](https://octokit.github.io/rest.js/)
