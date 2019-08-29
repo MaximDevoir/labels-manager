@@ -1,6 +1,7 @@
 import { Context } from 'probot'
 
 import GetLabels from './query/GetLabels'
+import { GraphQlQueryResponse } from 'probot/lib/github';
 
 type Pagination = {
   startCursor: string;
@@ -26,6 +27,8 @@ interface LabelCollection {
 export default class Labels {
   /**
    * The maximum number of labels to handle.
+   *
+   * TODO: Place `limit` into an environment variable.
    *
    * @type {number}
    * @memberof Labels
@@ -82,8 +85,30 @@ export default class Labels {
     this._totalCount = total
   }
 
-  async getLabels(after = "", limit = 100): Promise<GetLabels> {
-    const labels = new GetLabels(this.context, this.owner, this.repo, limit, after)
+  async getLabels() {
+    // First get labels request. We should verify this is the first request - we
+    // should only run `getLabels` once.
+    const firstLabelRequest = await this.getLabelsAfter()
+
+    { labelCount } = firstLabelRequest.repository.labels
+
+    console.log('firstLabelRequest', firstLabelRequest)
+
+    return firstLabelRequest
+  }
+
+  /**
+   * Get labels `limit` number of labels after `cursor`.
+   *
+   * @private
+   * @param {string} [cursor=""] Cursor where to begin search. If left empty,
+   * search will start at the beginning.
+   * @param {number} [limit=100] Maximum allowed by GitHub API is 100.
+   * @returns
+   * @memberof Labels
+   */
+  private async getLabelsAfter(cursor = null, limit = 100) {
+    const labels = await new GetLabels(this.context, this.owner, this.repo, limit, cursor).fire()
 
     return labels
   }

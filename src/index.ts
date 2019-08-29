@@ -18,8 +18,7 @@ export = (app: Application): void => {
       after: commitHash,
       repository: {
         name: repo,
-        owner: { name: owner },
-        default_branch: defaultBranch
+        owner: { name: owner }
       }
     } = context.payload
 
@@ -45,13 +44,24 @@ export = (app: Application): void => {
       recursive: 1
     })
 
-    // app.log('tree', tree)
+    const x = context.github.issues.listLabelsForRepo()
+
+    // const newStatus = await context.github.repos.createStatus({
+    //   state: 'error',
+    //   context: 'labels-manager',
+    //   owner,
+    //   repo,
+    //   sha: commitHash,
+    //   target_url: "https://github.com/MaximDevoir/probot-labels",
+    //   description: "This is a sample description"
+    // })
 
     const labels = new Labels(context, owner, repo)
 
-    context.log('getLabels', labels.getLabels())
+    const labelList = await labels.getLabels()
+    console.log('shouldnt get here if query fails', typeof labelList)
 
-    context.log('here')
+    context.log('End of push event')
   })
   // For more information on building apps:
   // https://probot.github.io/docs/

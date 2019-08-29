@@ -37,7 +37,7 @@ query GetLabels($owner: String!, $repo: String!, $limit: Int = 100, $after: Stri
 interface QueryVariables {
   owner: string;
   repo: string;
-  after: string | undefined
+  after: string | null
 }
 
 class GetLabels extends Query {
@@ -50,7 +50,7 @@ class GetLabels extends Query {
    * @param {string} [after=""]
    * @memberof GetLabels
    */
-  constructor(context: Context, owner: string, repo: string, limit: number, after: string) {
+  constructor(context: Context, owner: string, repo: string, limit: number, after: string | null = null) {
     const variables = {
       owner,
       repo,
