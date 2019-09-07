@@ -6,6 +6,8 @@ View the [spec](spec.md).
 
 [GitHub GraphQL API Explorer](https://developer.github.com/v4/explorer/)
 
+[Octokit Rest Documentation](https://octokit.github.io/rest.js/)
+
 ## Versioning
 
 ### When changing application permissions
