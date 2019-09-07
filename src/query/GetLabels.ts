@@ -1,5 +1,4 @@
 import Query from './Query'
-import { Variables } from 'probot/lib/github';
 import { Context } from 'probot';
 
 const getLabelsQuery = `
@@ -36,7 +35,6 @@ query GetLabels($owner: String!, $repo: String!, $limit: Int = 100, $after: Stri
 
 type Label = {
   id: string;
-  cursor: string;
   name: string;
   description: string;
   color: string;
@@ -44,11 +42,11 @@ type Label = {
   url?: string;
 }
 
-export interface ResponseInterface {
+export interface GetLabelsResponse {
   repository: {
-    pageInfo: PageInfo
-    totalCount: number
     labels: {
+      pageInfo: PageInfo
+      totalCount: number
       edges: LabelEdge[]
     }
   }
@@ -59,7 +57,7 @@ interface LabelEdge {
   label: Label
 }
 
-interface PageInfo {
+export interface PageInfo {
   startCursor: string | null
   endCursor: string | null
   hasPreviousPage: boolean
@@ -72,7 +70,7 @@ interface QueryVariables {
   after: string | null
 }
 
-class GetLabels extends Query<ResponseInterface> {
+class GetLabels extends Query<GetLabelsResponse> {
   /**
    * Creates an instance of GetLabels.
    * @param {Context} context
@@ -83,12 +81,17 @@ class GetLabels extends Query<ResponseInterface> {
    * @memberof GetLabels
    */
   constructor(context: Context, owner: string, repo: string, limit: number, after: string | null = null) {
+    let afterCursor = after
+    if (typeof after === 'string' && after.length === 0) {
+      afterCursor = null
+    }
     const variables = {
       owner,
       repo,
       limit,
-      after
+      after: afterCursor
     }
+
     super(context, getLabelsQuery, variables)
   }
 }

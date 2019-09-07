@@ -14,6 +14,7 @@ function onDefaultBranch(payload: WebhookPayloadPush): boolean {
 
 export = (app: Application): void => {
   app.on('push', async context => {
+    context.github.projects
     const {
       after: commitHash,
       repository: {
@@ -44,21 +45,11 @@ export = (app: Application): void => {
       recursive: 1
     })
 
-    // const newStatus = await context.github.repos.createStatus({
-    //   state: 'error',
-    //   context: 'labels-manager',
-    //   owner,
-    //   repo,
-    //   sha: commitHash,
-    //   target_url: "https://github.com/MaximDevoir/probot-labels",
-    //   description: "This is a sample description"
-    // })
-
     const labels = new Labels(context, owner, repo)
 
     const labelList = await labels.getLabels()
 
-    context.log('End of push event')
+    context.log(`End of push event - ${context.id}`)
   })
   // For more information on building apps:
   // https://probot.github.io/docs/

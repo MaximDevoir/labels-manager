@@ -1,6 +1,8 @@
 import { Variables, Headers, GraphQlQueryResponse, GraphQLError } from 'probot/lib/github'
 import { Context } from 'probot';
 
+import LabelsError from './../reporter/LabelsError'
+
 abstract class Query<IResponse> {
   protected queryErrored: boolean = false
 
@@ -19,20 +21,39 @@ abstract class Query<IResponse> {
   }
 
   fire() {
-    console.log('firing query')
     const { graphql } = this.context.github
-    const response = graphql(this.query, this.variables) as any as Promise<IResponse>
+    const response = graphql(this.query, this.variables)
 
     response.catch(res => {
-      console.log('errors occurred', res)
+    // TODO: Securely log errors and remove variables.
+    throw new LabelsError(this.context, {
+      title: 'Error: Encountered an error with a query.',
+      summary: 'Encountered an error while executing a query.',
+      text: [
+        'If this error persists, the app may be experiencing a bug.'
+      ]
+    })
+  })
+
+    // According to the Octokit/graphql response, it is possible for the
+    // response to be null. I don't if this is actually possible, so we will
+    // throw an error if that happens.
+    const responseData = response.then(res => {
+      if (res == null) {
+        throw new LabelsError(this.context, {
+          title: 'Internal Error: Unexpected query response (null)',
+          summary: 'Unexpected query response (null)',
+          text: [
+            'While executing a query, the data received was null.',
+          ]
+        })
+      }
+
+
+      return res as any as IResponse
     })
 
-    // if (response.errors) {
-    //   // TODO: Securely log errors and remove variables.
-    //   throw `Encountered an error with a query. ID of the query's context is ${this.context.id}`
-    // }
-
-    return response.then(res => res)
+    return responseData
   }
 }
 
