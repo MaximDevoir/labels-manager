@@ -52,9 +52,9 @@ export interface GetLabelsResponse {
   }
 }
 
-interface LabelEdge {
+export interface LabelEdge {
   cursor: string
-  label: Label
+  node: Label
 }
 
 export interface PageInfo {

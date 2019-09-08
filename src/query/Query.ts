@@ -49,7 +49,6 @@ abstract class Query<IResponse> {
         })
       }
 
-
       return res as any as IResponse
     })
 

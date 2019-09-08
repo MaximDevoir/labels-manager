@@ -1,6 +1,6 @@
 import { Context } from 'probot'
 
-import GetLabels, { PageInfo, GetLabelsResponse } from './query/GetLabels'
+import GetLabels, { PageInfo, LabelEdge } from './query/GetLabels'
 import LabelsError from './reporter/LabelsError'
 
 type Pagination = {
@@ -49,7 +49,6 @@ export default class Labels {
   }
 
   constructor(private context: Context, private owner: string, private repo: string) {
-    this.getLabelsFrom()
   }
 
   get labels(): LabelCollection {
@@ -63,6 +62,25 @@ export default class Labels {
     this._labels = Object.assign(this.labels, labels)
   }
 
+  addLabels(labels: LabelEdge[]) {
+    labels.forEach(label => {
+      const {
+        id,
+        name,
+        color,
+        description,
+       } = label.node
+      const { cursor } = label
+
+      this.labels[name] = {
+        id,
+        cursor,
+        name,
+        color,
+        description
+      }
+    })
+  }
   /**
    * Pagination information from the instance of the last `fired` query.
    *
@@ -91,13 +109,18 @@ export default class Labels {
   }
 
   /**
-   * Retrieve labels from the repository.
+   * Retrieve all labels from the repository.
    *
+   * **Note**: You must use `await getAllLabels()` to ensure you are waiting for
+   * all pages of labels. Otherwise, a promise of the first page of labels will
+   * be returned.
    * @returns
    * @memberof Labels
    */
-  async getLabels() {
+  async getAllLabels() {
+    const allLabels = await this.getLabelsFrom()
 
+    return allLabels
   }
 
   /**
@@ -123,9 +146,11 @@ export default class Labels {
     }
 
     if (labels.repository.labels.pageInfo.hasNextPage) {
-      this.getLabelsFrom(labels.repository.labels.pageInfo.endCursor)
+      await this.getLabelsFrom(labels.repository.labels.pageInfo.endCursor)
     }
 
-    return labels
+    this.addLabels(labels.repository.labels.edges)
+
+    return this.labels
   }
 }

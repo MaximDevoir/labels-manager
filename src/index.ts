@@ -47,7 +47,7 @@ export = (app: Application): void => {
 
     const labels = new Labels(context, owner, repo)
 
-    const labelList = await labels.getLabels()
+    const labelList = await labels.getAllLabels()
 
     context.log(`End of push event - ${context.id}`)
   })
