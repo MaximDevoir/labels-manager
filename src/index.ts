@@ -16,7 +16,7 @@ export = (app: Application): void => {
   app.on('push', async context => {
     context.github.projects
     const {
-      after: commitHash,
+      after: commitSha,
       repository: {
         name: repo,
         owner: { name: owner }
@@ -34,20 +34,29 @@ export = (app: Application): void => {
       return
     }
 
-    app.log('commit hash', commitHash)
+    app.log('commit hash', commitSha)
     const {
       data: { tree }
     } = await context.github.git.getTree({
       owner,
       repo,
       // eslint-disable-next-line @typescript-eslint/camelcase
-      tree_sha: commitHash,
+      tree_sha: commitSha,
       recursive: 1
     })
 
     const labels = new Labels(context, owner, repo)
 
     const labelList = await labels.getAllLabels()
+
+    const contents = await context.github.repos.getContents({
+      owner,
+      repo,
+      ref: commitSha,
+      path: '.github'
+    })
+
+    console.log('contents', contents)
 
     context.log(`End of push event - ${context.id}`)
   })
