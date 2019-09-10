@@ -25,15 +25,15 @@ abstract class Query<IResponse> {
     const response = graphql(this.query, this.variables)
 
     response.catch(res => {
-    // TODO: Securely log errors and remove variables.
-    throw new LabelsError(this.context, {
-      title: 'Error: Encountered an error with a query.',
-      summary: 'Encountered an error while executing a query.',
-      text: [
-        'If this error persists, the app may be experiencing a bug.'
-      ]
+      // TODO: Securely log errors and remove variables.
+      throw new LabelsError(this.context, {
+        title: 'Error: Encountered an error with a query.',
+        summary: 'Encountered an error while executing a query.',
+        text: [
+          'If this error persists, the app may be experiencing a bug.'
+        ]
+      })
     })
-  })
 
     // According to the Octokit/graphql response, it is possible for the
     // response to be null. I don't if this is actually possible, so we will
