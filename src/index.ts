@@ -46,17 +46,7 @@ export = (app: Application): void => {
     })
 
     const labels = new Labels(context, owner, repo)
-
-    const labelList = await labels.getAllLabels()
-
-    const contents = await context.github.repos.getContents({
-      owner,
-      repo,
-      ref: commitSha,
-      path: '.github'
-    })
-
-    console.log('contents', contents)
+    await labels.getAllLabels()
 
     context.log(`End of push event - ${context.id}`)
   })
