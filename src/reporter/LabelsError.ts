@@ -42,14 +42,18 @@ export interface ErrorReport {
  */
 class LabelsError extends Error {
   /**
-   * Creates an instance of LabelsError.
-   * @param {*} username Username
-   * @param {*} repo Repository
-   * @param {*} message Message to append to check suite.
+   * Report an error as a `check` on the repository.
+   *
+   * @param {Context} context
+   * @param {ErrorReport} details
+   * @param {...any[]} privateArgsToLog Extra arguments are logged privately to the server
    * @memberof LabelsError
    */
-  constructor (public context: Context, public details: ErrorReport) {
+  constructor (public context: Context, public details: ErrorReport, ...privateArgsToLog: any[]) {
     super(printLines(details.summary))
+
+    this.name = 'LabelsError'
+    this.context.log.error(`Extra logs for (summary): ${details.summary}\n\n`, ...privateArgsToLog)
 
     const {
       after: commitSha,
@@ -63,13 +67,13 @@ class LabelsError extends Error {
       '### Debug Information',
       `**Event Type**: \`${context.event}\``,
       `**Context ID**: \`${context.id}\``,
-      `**Event Added: ${moment().format('LLLL')}`
+      `**Event Added**: ${moment().format('LLLL')}`
     ]
 
     const reportFooter = [
-      '<small>',
+      '<sup>',
       'If this error persists, consider [raising an issue](https://github.com/MaximDevoir/probot-labels/issues).',
-      '</small>'
+      '</sup>'
     ]
 
     context.github.checks.create({

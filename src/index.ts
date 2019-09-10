@@ -1,5 +1,6 @@
 import { Application } from 'probot'
 import Labels from './Labels';
+import RepoLabels from './query/RepoLabels';
 
 import { WebhookPayloadPush } from '@octokit/webhooks'
 
@@ -48,6 +49,9 @@ export = (app: Application): void => {
     const labels = new Labels(context, owner, repo)
     await labels.getAllLabels()
 
+    const repoLabels = new RepoLabels(context)
+    const x = await repoLabels.getRepoLabels()
+    console.log(x)
     context.log(`End of push event - ${context.id}`)
   })
   // For more information on building apps:

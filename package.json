@@ -4,7 +4,7 @@
   "scripts": {
     "build": "npm run build:clean && tsc -p tsconfig.json",
     "build:clean": "rimraf ./dist/ && rimraf ./typings/",
-    "dev": "nodemon --exec \"npm start\"",
+    "dev": "nodemon --exec \"npm run build && npm start\"",
     "start": "probot run ./dist/index.js",
     "lint": "eslint **/*.ts",
     "test": "jest",
@@ -15,13 +15,24 @@
     "probot-app"
   ],
   "dependencies": {
+    "@hapi/joi": "^15.1.1",
+    "hex-color-regex": "^1.1.0",
+    "js-yaml": "^3.13.1",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
-    "probot": "^9.3.2"
+    "node-fetch": "^2.6.0",
+    "parse-json": "^5.0.0",
+    "probot": "^9.3.4",
+    "strip-ansi": "^5.2.0"
   },
   "devDependencies": {
+    "@types/hapi__joi": "^15.0.4",
     "@types/jest": "^24.0.18",
+    "@types/jsonwebtoken": "^8.3.3",
     "@types/nock": "^10.0.3",
     "@types/node": "^12.7.2",
+    "@types/node-fetch": "^2.5.0",
+    "@types/parse-json": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "eslint": "6.1.0",
