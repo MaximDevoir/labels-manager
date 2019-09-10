@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "*.json",
+    "*.js",
+    "src/**/*.ts"
+  ],
+  "ignore": ["dist/", "typings/"],
+  "ext": "ts,js,json",
+  "verbose": true,
+  "delay": 500
+}
