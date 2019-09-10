@@ -21,8 +21,7 @@ const labels = Joi.array().items(labelSchema)
 
 function validate(data: Array<Object> | Object) {
   const validationSchema = Array.isArray(data) ? labels : labelSchema
-
-  return Joi.validate(data, validationSchema)
+  return validationSchema.validate(data)
 }
 
 export default validate
