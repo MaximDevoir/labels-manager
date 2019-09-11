@@ -20,31 +20,18 @@ export = (app: Application): void => {
       after: commitSha,
       repository: {
         name: repo,
-        owner: { name: owner }
+        owner: { login: owner }
       }
     } = context.payload
 
     const onMaster = onDefaultBranch(context.payload)
 
-    if (!owner) {
-      throw "This is strange. We did not find an owner for this repository."
-    }
-
     if (!onMaster) {
-      app.log('Push event occurred on a non-default branch. Goodbye.')
+      context.log('Push event occurred on a non-default branch. Goodbye.')
       return
     }
 
-    app.log('commit hash', commitSha)
-    const {
-      data: { tree }
-    } = await context.github.git.getTree({
-      owner,
-      repo,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      tree_sha: commitSha,
-      recursive: 1
-    })
+    context.log('commit hash', commitSha)
 
     const labels = new Labels(context, owner, repo)
     await labels.getAllLabels()
