@@ -38,7 +38,7 @@ export default class Labels {
    * Number of labels to retrieve from a repository with each request. Cannot
    * exceed the 100 label limit, set by GitHub.
    */
-  private labelJumpCount = 4
+  private labelJumpCount = 100
   private _labels: LabelCollection = {}
   private _totalCount: number | null = null
   private _pageInfo: PageInfo = {

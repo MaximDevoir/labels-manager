@@ -1,45 +1,23 @@
-import { Application } from 'probot'
+import { Application, Context } from 'probot'
 import Labels from './Labels';
+import Metrics from './Metrics'
 import RepoLabels from './query/RepoLabels';
 
 import { WebhookPayloadPush } from '@octokit/webhooks'
-
-function onDefaultBranch(payload: WebhookPayloadPush): boolean {
-  const { default_branch: defaultBranch } = payload.repository
-  if (payload.ref === `refs/heads/${defaultBranch}`) {
-    return true
-  }
-
-  return false
-}
+import Job from './Job';
 
 export = (app: Application): void => {
   app.on('push', async context => {
-    context.github.projects
-    const {
-      after: commitSha,
-      repository: {
-        name: repo,
-        owner: { login: owner }
-      }
-    } = context.payload
+    const job = new Job(context)
 
-    const onMaster = onDefaultBranch(context.payload)
+    job.sync()
 
-    if (!onMaster) {
-      context.log('Push event occurred on a non-default branch. Goodbye.')
-      return
-    }
+    // const labels = new Labels(context, owner, repo)
+    // await labels.getAllLabels()
 
-    context.log('commit hash', commitSha)
-
-    const labels = new Labels(context, owner, repo)
-    await labels.getAllLabels()
-
-    const repoLabels = new RepoLabels(context)
-    const x = await repoLabels.getRepoLabels()
-    console.log(x)
-    context.log(`End of push event - ${context.id}`)
+    // const repoLabels = new RepoLabels(context)
+    // const x = await repoLabels.getRepoLabels()
+    // console.log(x)
   })
   // For more information on building apps:
   // https://probot.github.io/docs/

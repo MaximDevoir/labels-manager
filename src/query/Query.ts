@@ -3,7 +3,7 @@ import { Context } from 'probot';
 
 import LabelsError from './../reporter/LabelsError'
 
-abstract class Query<IResponse> {
+class Query<IResponse> {
   protected queryErrored: boolean = false
 
   /**

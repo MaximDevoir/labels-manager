@@ -3,6 +3,8 @@ import parseJSON from 'parse-json'
 import stripAnsi from 'strip-ansi'
 import { Context, Octokit } from 'probot';
 import LabelsError from '../reporter/LabelsError';
+import validateLabels from './../schema/labels'
+
 import { promises } from 'fs';
 
 const hexColorRegex = require('hex-color-regex')
@@ -172,6 +174,7 @@ class RepoLabels {
     }
 
     let parsedContent
+    let validatedContent: Label[] = []
     try {
       parsedContent = parseJSON(content)
 
@@ -184,16 +187,14 @@ class RepoLabels {
           '```'
         )
       } else {
-        parsedContent = parsedContent.filter((parsedContentItem: Partial<Label>) => {
-          if (typeof parsedContentItem.name === 'string'
-            && typeof parsedContentItem.color === 'string') {
-            if (
-              parsedContentItem.name.length >= 1 && parsedContentItem.name.length <= 50
-              && hexColorRegex({ strict: true }).test(`#${parsedContentItem.color}`) ) {
-                return true
-              }
+        parsedContent.forEach(parsedContentElement => {
+          const { error, value } = validateLabels(parsedContentElement)
+
+          if (error) {
+            this.context.log('annotated error', error.annotate())
+          } else {
+            validatedContent.push(parsedContentElement)
           }
-          return false
         })
       }
 
@@ -234,7 +235,7 @@ class RepoLabels {
 
     console.log('parsedContent', parsedContent)
     this.labelCache[item.name][item.path] = Object.assign(item, {
-      content: parsedContent
+      content: validatedContent
     })
   }
 
