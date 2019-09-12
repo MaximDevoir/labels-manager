@@ -4,7 +4,8 @@
   "scripts": {
     "build": "npm run build:clean && tsc -p tsconfig.json",
     "build:clean": "rimraf ./dist/ && rimraf ./typings/",
-    "dev": "nodemon --exec \"npm run build && npm start\"",
+    "dev:nodemon": "echo \"-------DEPRECATION NOTICE-------\nThis command is deprecated. Please use the 'dev' script\" && exit 1 && nodemon --exec \"npm run build && npm start\"",
+    "dev": "npm run build:clean && tsc-watch --onSuccess \"npm start\" --onFailure \"echo Compilation Failed\"",
     "start": "probot run ./dist/index.js",
     "lint": "eslint **/*.ts",
     "test": "jest",
@@ -43,6 +44,7 @@
     "rimraf": "^3.0.0",
     "smee-client": "^1.1.0",
     "ts-jest": "^24.0.2",
+    "tsc-watch": "^3.0.1",
     "typescript": "^3.5.3"
   }
 }
