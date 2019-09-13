@@ -88,7 +88,7 @@ class Metrics {
         this.startMetrics.rates[resource as keyof IMetrics['rates']],
         limits
       ]
-      this.context.log(`Ratelimit cost for ${resource} resource: ${initialRemaining - endRemaining} (${endRemaining} remaining)`)
+      this.context.log(`Rate cost for ${resource} resource: ${initialRemaining - endRemaining} (${endRemaining} remaining)`)
     }
   }
 }
