@@ -143,14 +143,15 @@ class RepoLabels {
     this.removeFileFromCache(item)
 
     /**
-     * The GitHub API limits us to files of 1MB is size
+     * **API Note:** The GitHub API limits us to files of 1MB in size.
+     * @const {number} sizeLimit Maximum size of spec file in bytes.
      */
     const sizeLimit = 1000**2
     if (item.size >= sizeLimit) {
       throw new LabelsError(this.context, {
         title: 'File Too Large ',
         summary: [
-          `The file \`${item.name}\` exceeds the 1MB limit.`,
+          `The file \`${item.name}\` exceeds the ${sizeLimit/1000}KB limit.`,
           '### Solution',
           `Split \`${item.name}\` into multiple - smaller - files.`
         ]
