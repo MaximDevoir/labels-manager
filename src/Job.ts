@@ -1,12 +1,12 @@
 import { Context } from "probot";
+import SpecFiles from "./labels/SpecFiles";
 import SpecLabels from "./labels/SpecLabels";
 import IssueLabels from "./labels/IssueLabels";
 import Metrics from "./Metrics";
 import { WebhookPayloadPush } from "@octokit/webhooks";
 import GetIssueLabelTotalCount from "./query/IssueLabelsCount";
 import LabelsError from "./reporter/LabelsError";
-
-type UnPromisify<T> = T extends Promise<infer U> ? U : T;
+import IssueLabel from "./labels/IssueLabel";
 
 /**
  * Whether or not the payload is on the `default` branch (usually master)
@@ -28,12 +28,14 @@ function onDefaultBranch(payload: WebhookPayloadPush): boolean {
 class Job {
   public metrics: Metrics
   public specLabels: SpecLabels
+  public specFiles: SpecFiles
   public issueLabels: IssueLabels
 
-  constructor (protected context: Context) {
+  constructor (protected context: Context<WebhookPayloadPush>) {
     this.metrics = new Metrics(context)
     this.specLabels = new SpecLabels(context)
     this.issueLabels = new IssueLabels(context)
+    this.specFiles = new SpecFiles(context)
   }
 
   private async preSync() {
@@ -42,14 +44,14 @@ class Job {
   }
 
   private async postSync() {
+    // TODO: Update check
     await this.metrics.end()
     this.metrics.logMetrics()
-
     this.context.log(`End of push event - ${this.context.id}`)
   }
 
   public async sync() {
-    this.preSync() // Start of method
+    await this.preSync() // Start of method
 
     const onMaster = onDefaultBranch(this.context.payload)
     if (!onMaster) {
@@ -57,24 +59,9 @@ class Job {
       return
     }
 
-    const labels = await this.context.github.paginate(this.context.github.issues.listLabelsForRepo.endpoint.merge({
-      ...this.context.repo(),
-      per_page: 100
-    })) as UnPromisify<ReturnType<Context['github']['issues']['listLabelsForRepo']>>['data']
-
-    // TODO: Extract issue label count check to separate file
-    const issuesLabelTotalCount = (await new GetIssueLabelTotalCount(this.context).fire()).repository.labels.totalCount
-    const issuesLabelLimit = 256
-    if (issuesLabelTotalCount > issuesLabelLimit) {
-      throw new LabelsError(this.context, {
-        title: 'Repository exceeds label limit.',
-        summary: [`This repository contains ${issuesLabelTotalCount} labels - more than the ${issuesLabelLimit} label limit.`]
-      })
-    }
-
-    console.log('labelCount', issuesLabelTotalCount)
-
-    this.postSync() // End of method
+    await this.issueLabels.getIssueLabels()
+    await this.specFiles.fetchSpecFiles()
+    await this.postSync() // End of method
   }
 }
 
