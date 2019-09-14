@@ -8,7 +8,6 @@ interface SpecLabelsElement {
   file: SpecFile
 }
 
-
 export function checkForDuplicates(job: Job) {
   const errorMsg: string[] = []
   for (const [label, specLabels] of Object.entries(job.specLabels.labels)) {
