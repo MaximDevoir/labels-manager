@@ -44,7 +44,18 @@ class Job {
   }
 
   private async postSync() {
-    // TODO: Update check
+    // TODO: Abstract success report
+    await this.context.github.checks.create({
+      ...this.context.repo(),
+      name: 'Labels Manager',
+      head_sha: this.context.payload.after,
+      conclusion: 'success',
+      status: 'completed',
+      output: {
+        title: 'Labels Manager',
+        summary: 'Successfully synced labels',
+      }
+    })
     await this.metrics.end()
     this.metrics.logMetrics()
     this.context.log(`End of push event - ${this.context.id}`)
