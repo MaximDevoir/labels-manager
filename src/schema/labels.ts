@@ -8,7 +8,7 @@ const labelSchema = Joi.object({
 
   color: Joi.string()
     .max(32)
-    .required(),
+    .required(),// TODO: Validate color
 
   description: Joi.string()
     .min(0)
@@ -17,7 +17,6 @@ const labelSchema = Joi.object({
 })
 
 const labels = Joi.array().items(labelSchema)
-
 
 function validate(data: Array<Object> | Object) {
   const validationSchema = Array.isArray(data) ? labels : labelSchema
