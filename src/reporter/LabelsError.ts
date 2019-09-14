@@ -30,8 +30,10 @@ export interface ErrorReport {
    * The conclusion of the error.
    *
    * Defaults to 'neutral' so as not to halt a repository's CI or CD processes.
+   *
+   * **Note**: Failure or failure-like conclusions are not supported. See [issue #4](https://github.com/MaximDevoir/probot-labels/issues/4) for more information.
    */
-  conclusion?: ChecksCreateParams['conclusion']
+  conclusion?: Extract<ChecksCreateParams['conclusion'], 'success' | 'neutral'>
 }
 
 /**
@@ -82,6 +84,7 @@ class LabelsError extends Error {
       name: 'Labels Manager',
       head_sha: commitSha,
       conclusion: details.conclusion || 'neutral',
+      status: 'completed',
       output: {
         title: details.title || 'Labels Manager',
         summary: printLines(details.summary),
