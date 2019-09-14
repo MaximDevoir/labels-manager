@@ -5,6 +5,7 @@ import stripAnsi from 'strip-ansi'
 import { ReposGetContentsResponseItem } from './SpecFiles'
 import LabelsError from '../reporter/LabelsError';
 import validateLabels from './../schema/labels'
+import SpecSchemaErrors from './SpecSchemaErrors'
 import { Context } from 'probot';
 
 export interface SpecFileLabel {
@@ -14,10 +15,9 @@ export interface SpecFileLabel {
 }
 
 class SpecFile {
-  private schemaErrors = []
-  private schemaWarnings = []
+  public schemaErrors = new SpecSchemaErrors()
 
-  constructor(private context: Context, private fileInfo: ReposGetContentsResponseItem) {}
+  constructor(private context: Context, public fileInfo: ReposGetContentsResponseItem) {}
 
   private checkFileSize() {
     /**
@@ -61,42 +61,37 @@ class SpecFile {
     try {
       parsedContent = parseJSON(content)
 
-      let validationErrors: string[] = []
       if (!Array.isArray(parsedContent)) {
-        validationErrors.push(
-          '- Configuration is not an array.',
-          '```JSON',
-          `${JSON.stringify(parsedContent, null, 2).slice(0, 250)}`,
-          '```'
-        )
+        this.schemaErrors.add({
+          type: 'error',
+          title: 'Configuration is not an array',
+          text: [
+            '```JSON',
+            `${JSON.stringify(parsedContent, null, 2).slice(0, 250)}`,
+            '```'
+          ]
+        })
       } else {
         parsedContent.forEach(parsedContentElement => {
           const { error, value } = validateLabels(parsedContentElement)
 
           if (error) {
-            this.context.log('annotated error', error.annotate())
-            validationErrors.push('```' + stripAnsi(error.annotate()) + '```')
+            this.schemaErrors.add({
+              type: 'error',
+              title: 'Invalid label format',
+              text: [
+                '```',
+                stripAnsi(error.annotate()),
+                '```'
+              ]
+            })
           } else {
             validLabels.push(parsedContentElement)
           }
         })
       }
-
-      // TODO: This should be handled by SpecFiles
-      // if (validationErrors.length) {
-      //   throw new LabelsError(this.context, {
-      //     title: 'Label configuration is invalid',
-      //     summary: [
-      //       `Label configuration for \`${this.fileInfo.name}\` is invalid.`,
-      //       ...validationErrors
-      //     ],
-      //     text: [
-      //       '### Meta Information',
-      //       `**Error Count**: ${validationErrors.length}`
-      //     ]
-      //   })
-      // }
     } catch (err) {
+      // TODO: Add this to schema errors
       if (err.name === 'JSONError') {
         throw new LabelsError(this.context, {
           title: 'Unable to parse JSON',

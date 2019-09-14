@@ -2,6 +2,7 @@ import { Context, Octokit } from "probot";
 
 import LabelsError from './../reporter/LabelsError'
 import SpecFile from './SpecFile'
+import printLines from "../lib/printLines";
 
 export const labelsDirectory = '.github/labels'
 
@@ -40,7 +41,7 @@ export interface GetContentsResponse extends GetContentsUnPromisifiedResponse {
 }
 
 class SpecFiles {
-  // specFiles
+  private specFiles: SpecFile[] = []
 
   constructor(private context: Context) {
   }
@@ -94,7 +95,7 @@ class SpecFiles {
       })
 
       await Promise.all(addedFiles).then(specFiles => {
-        console.log('specFiles', specFiles)
+        this.specFiles = specFiles
       })
     } catch (err) {
       if (err.name === 'LabelsError') {
@@ -105,11 +106,57 @@ class SpecFiles {
         title: 'No Labels Discovered',
         summary: 'No labels discovered in the repository.',
         text: [
-          `No label configuration found in \`${labelsDirectory}\`. Did you place your label files somewhere else?`,
+          `No labels found in \`${labelsDirectory}\`. Did you place your label files somewhere else?`,
           '',
-          'If you have not setup any label files, you can safely ignore this message.'
+          'If you have not setup any label files, you can safely ignore this message.',
+          // TODO: Add link to getting-started page
         ]
       }, err)
+    }
+
+    this.reportLabelErrors()
+  }
+
+  private reportLabelErrors() {
+    const specErrors: string[] = []
+    let specErrorCount: number = 0
+
+    this.specFiles.forEach(specFile => {
+      if (specFile.schemaErrors.hasErrors()) {
+        specErrorCount += specFile.schemaErrors.getErrorCount()
+
+        const specFileErrors: string[] = specFile.schemaErrors.errors.map((specError, index) => {
+          /**
+           * Padding lines required. See https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
+           */
+          return printLines([
+            '<details>',
+            `<summary>${index}. ${specError.title}</summary>`,
+            '',
+            ...specError.text,
+            '</details>',
+            ''
+          ])
+        })
+
+        specErrors.push(
+          `### ${specFile.fileInfo.name}`,
+          ...specFileErrors
+        )
+      }
+    })
+
+    if (specErrors.length) {
+      throw new LabelsError(this.context, {
+        title: 'Invalid Label Setup',
+        summary: [
+          'Please fix the errors described below.',
+          ...specErrors
+        ],
+        text: [
+          `**Error Count**: ${specErrorCount}`
+        ]
+      })
     }
   }
 }
