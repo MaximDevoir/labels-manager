@@ -91,23 +91,19 @@ class SpecFile {
         })
       }
     } catch (err) {
-      // TODO: Add this to schema errors
       if (err.name === 'JSONError') {
-        throw new LabelsError(this.context, {
+        this.schemaErrors.add({
+          type: 'error',
           title: 'Unable to parse JSON',
-          summary: [
+          text: [
             `Unable to parse JSON in file \`${this.fileInfo.name}\``,
             '```',
             `${err.message ? stripAnsi(err.message) : ''}`,
             '```'
-          ],
-          text: [
-            '### Code Frame',
-            '```',
-            `${err.codeFrame ? stripAnsi(err.codeFrame) : 'No frame available.'}`,
-            '```'
           ]
-        }, '\nError caught:\n', err)
+        })
+
+        return
       }
 
       throw err
