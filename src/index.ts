@@ -1,9 +1,5 @@
-import { Application, Context } from 'probot'
-import Labels from './Labels';
-import Metrics from './Metrics'
-import RepoLabels from './query/RepoLabels';
+import { Application } from 'probot'
 
-import { WebhookPayloadPush } from '@octokit/webhooks'
 import Job from './Job';
 import LabelsError from './reporter/LabelsError';
 
