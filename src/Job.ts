@@ -61,7 +61,7 @@ class Job {
       conclusion: 'success',
       status: 'completed',
       output: {
-        title: 'Labels Manager',
+        title: 'Successfully synced labels',
         summary: 'Successfully synced labels',
       }
     })
