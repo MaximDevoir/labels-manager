@@ -1,6 +1,7 @@
 import { Context, Octokit } from "probot";
 
 import LabelsError from './../reporter/LabelsError'
+import SpecFile from './SpecFile'
 
 export const labelsDirectory = '.github/labels'
 
@@ -70,7 +71,7 @@ class SpecFiles {
        *
        * See more on the [GitHub API page](https://developer.github.com/v3/repos/contents/#get-contents)
        */
-      const maxFilesInDirectory = 250
+      const maxFilesInDirectory = 30
       if (dirContents.data.length >= maxFilesInDirectory) {
         throw new LabelsError(this.context, {
           title: 'Too many files in labels directory',
@@ -87,16 +88,14 @@ class SpecFiles {
         }
 
         return false
-      }).map(async node => {
-        // TypeScript should recognize, without the type assertion below, that
-        // `type` is `file`, as we declared above.
-        // return await this.addFileToCache(node as Omit<typeof node, 'type'> & { type: 'file'})
+      }).map(async file => {
+        const specFile = new SpecFile(this.context, file)
+        return specFile.fetchSpec()
       })
 
-      await Promise.all(addedFiles)
-
-      // return this.labelCache
-
+      await Promise.all(addedFiles).then(specFiles => {
+        console.log('specFiles', specFiles)
+      })
     } catch (err) {
       if (err.name === 'LabelsError') {
         throw err
