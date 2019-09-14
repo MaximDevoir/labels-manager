@@ -17,6 +17,8 @@ class SpecLabel {
   constructor(public label: ISpecLabel) {
 
   }
+
+  // TODO: Add methods for getting label name, description, and color.
 }
 
 export default SpecLabel
