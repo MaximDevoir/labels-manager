@@ -19,22 +19,29 @@ class SpecFile {
 
   constructor(private context: Context, public fileInfo: ReposGetContentsResponseItem) {}
 
-  private checkFileSize() {
-    /**
-     * **API Note:** The GitHub API limits us to files of 1MB in size.
-     * @const {number} sizeLimit Maximum size of spec file in bytes.
-     */
-    const sizeLimit = 1000**2
+  /**
+   * Checks if the file size is within `sizeLimit`.
+   *
+   * **API Note:** The GitHub API limits us to files of 1MB in size.
+   *
+   * @returns {boolean} Returns `false` when file size is too large.
+   */
+  private checkFileSize(sizeLimit: number = 1000**2): boolean {
     if (this.fileInfo.size >= sizeLimit) {
-      throw new LabelsError(this.context, {
-        title: 'File Too Large ',
-        summary: [
+      this.schemaErrors.add({
+        type: 'error',
+        title: 'File too large',
+        text: [
           `The file \`${this.fileInfo.name}\` exceeds the ${sizeLimit/1000}KB limit.`,
-          '### Solution',
-          `Split \`${this.fileInfo.name}\` into multiple - smaller - files.`
+          '**Solutions**',
+          `- Split \`${this.fileInfo.name}\` into multiple - smaller - files.`
         ]
       })
+
+      return false
     }
+
+    return true
   }
 
   private async fetchSpecContents () {
@@ -112,7 +119,8 @@ class SpecFile {
 
 
   async fetchSpec () {
-    this.checkFileSize()
+    if (this.checkFileSize() === false) return this
+
     await this.fetchSpecContents()
     return this
   }
