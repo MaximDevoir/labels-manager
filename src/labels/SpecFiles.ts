@@ -3,6 +3,7 @@ import { Context, Octokit } from "probot";
 import LabelsError from './../reporter/LabelsError'
 import SpecFile from './SpecFile'
 import printLines from "../lib/printLines";
+import Job from "../Job";
 
 export const labelsDirectory = '.github/labels'
 
@@ -43,7 +44,7 @@ export interface GetContentsResponse extends GetContentsUnPromisifiedResponse {
 class SpecFiles {
   private specFiles: SpecFile[] = []
 
-  constructor(private context: Context) {
+  constructor(private context: Context, private job: Job) {
   }
 
   async fetchSpecFiles() {
@@ -90,7 +91,7 @@ class SpecFiles {
 
         return false
       }).map(async file => {
-        const specFile = new SpecFile(this.context, file)
+        const specFile = new SpecFile(this.context, this.job, file)
         return specFile.fetchSpec()
       })
 

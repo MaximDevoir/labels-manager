@@ -1,5 +1,20 @@
+import SpecFile from "./SpecFile";
+
+export interface ISpecLabel {
+  name: string,
+  color: string,
+  description: string
+}
+
 class SpecLabel {
-  constructor(public name?: string, public color?: string, public description?: string) {
+  /**
+   * Creates an instance of SpecLabel.
+   *
+   * @param {ISpecLabel} label The information relating to the label
+   * @param {SpecFile} file The associated SpecFile for `label`
+   * @memberof SpecLabel
+   */
+  constructor(public label: ISpecLabel) {
 
   }
 }

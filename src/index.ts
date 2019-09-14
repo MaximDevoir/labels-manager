@@ -36,6 +36,9 @@ export = (app: Application): void => {
       ...(typeof e.stack === 'string' ? ['```', e.stack, '```'] : ['No stack available', `Stack is \`${typeof e.stack}\``]),
 
       )
+    } finally {
+      // Attempts to log metrics if not already logged. This will miss any resource costs incurred during the `catch` phase.
+      job.endMetrics()
     }
   })
 

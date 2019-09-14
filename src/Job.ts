@@ -1,6 +1,6 @@
 import { Context } from "probot";
 import SpecFiles from "./labels/SpecFiles";
-import SpecLabels from "./labels/SpecLabels";
+import SpecLabels, { checkForDuplicates } from "./labels/SpecLabels";
 import IssueLabels from "./labels/IssueLabels";
 import Metrics from "./Metrics";
 import { WebhookPayloadPush } from "@octokit/webhooks";
@@ -27,15 +27,16 @@ function onDefaultBranch(payload: WebhookPayloadPush): boolean {
  */
 class Job {
   public metrics: Metrics
-  public specLabels: SpecLabels
   public specFiles: SpecFiles
+  public specLabels: SpecLabels
   public issueLabels: IssueLabels
+  private endMetricsCalled = false
 
-  constructor (protected context: Context<WebhookPayloadPush>) {
+  constructor (public context: Context<WebhookPayloadPush>) {
     this.metrics = new Metrics(context)
-    this.specLabels = new SpecLabels(context)
     this.issueLabels = new IssueLabels(context)
-    this.specFiles = new SpecFiles(context)
+    this.specLabels = new SpecLabels()
+    this.specFiles = new SpecFiles(context, this)
   }
 
   private async preSync() {
@@ -43,6 +44,14 @@ class Job {
     await this.metrics.start()
   }
 
+  public async endMetrics() {
+    if (this.endMetricsCalled) {
+      return
+    }
+
+    await this.metrics.end()
+    this.metrics.logMetrics()
+  }
   private async postSync() {
     // TODO: Abstract success report
     await this.context.github.checks.create({
@@ -56,8 +65,8 @@ class Job {
         summary: 'Successfully synced labels',
       }
     })
-    await this.metrics.end()
-    this.metrics.logMetrics()
+
+    await this.endMetrics()
     this.context.log(`End of push event - ${this.context.id}`)
   }
 
@@ -72,6 +81,7 @@ class Job {
 
     await this.issueLabels.getIssueLabels()
     await this.specFiles.fetchSpecFiles()
+    checkForDuplicates(this)
     await this.postSync() // End of method
   }
 }

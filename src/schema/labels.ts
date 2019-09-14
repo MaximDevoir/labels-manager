@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi'
+import { ISpecLabel } from '../labels/SpecLabel'
 
 const labelSchema = Joi.object({
   name: Joi.string()
@@ -13,14 +14,15 @@ const labelSchema = Joi.object({
   description: Joi.string()
     .min(0)
     .max(100)
+    .optional()
     .default('')
 })
 
 const labels = Joi.array().items(labelSchema)
 
-function validate(data: Array<Object> | Object) {
+function validate(data: any) {
   const validationSchema = Array.isArray(data) ? labels : labelSchema
-  return validationSchema.validate(data)
+  return validationSchema.validate<ISpecLabel>(data)
 }
 
 export default validate

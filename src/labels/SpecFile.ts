@@ -7,17 +7,12 @@ import LabelsError from '../reporter/LabelsError';
 import validateLabels from './../schema/labels'
 import SpecSchemaErrors from './SpecSchemaErrors'
 import { Context } from 'probot';
-
-export interface SpecFileLabel {
-  name: string,
-  color: string,
-  description?: string
-}
+import Job from '../Job';
 
 class SpecFile {
   public schemaErrors = new SpecSchemaErrors()
 
-  constructor(private context: Context, public fileInfo: ReposGetContentsResponseItem) {}
+  constructor(private context: Context, private job: Job, public fileInfo: ReposGetContentsResponseItem) {}
 
   /**
    * Checks if the file size is within `sizeLimit`.
@@ -64,7 +59,6 @@ class SpecFile {
     }
 
     let parsedContent
-    let validLabels: SpecFileLabel[] = []
     try {
       parsedContent = parseJSON(content)
 
@@ -93,7 +87,7 @@ class SpecFile {
               ]
             })
           } else {
-            validLabels.push(parsedContentElement)
+            this.job.specLabels.addLabel(value, this)
           }
         })
       }
