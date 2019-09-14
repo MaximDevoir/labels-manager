@@ -1,5 +1,3 @@
-import Labels from "../Labels";
-import { Label } from "../query/RepoLabels";
 import { Context } from "probot";
 import IssueLabel, { IIssueLabel } from "./IssueLabel";
 import GetIssueLabelTotalCount from "../query/IssueLabelsCount";
