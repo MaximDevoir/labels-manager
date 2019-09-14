@@ -37,14 +37,6 @@ export = (app: Application): void => {
 
       )
     }
-
-
-    // const labels = new Labels(context, owner, repo)
-    // await labels.getAllLabels()
-
-    // const repoLabels = new RepoLabels(context)
-    // const x = await repoLabels.getRepoLabels()
-    // console.log(x)
   })
 
   // For more information on building apps:
