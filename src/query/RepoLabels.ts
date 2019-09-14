@@ -234,7 +234,6 @@ class RepoLabels {
       throw err
     }
 
-    console.log('parsedContent', parsedContent)
     this.labelCache[item.name][item.path] = Object.assign(item, {
       content: validatedContent
     })
