@@ -82,7 +82,18 @@ class Job {
     await this.issueLabels.getIssueLabels()
     await this.specFiles.fetchSpecFiles()
     checkForDuplicates(this)
+
+    const x = getDifferences(this.specLabels, this.issueLabels)
+
     await this.postSync() // End of method
+  }
+}
+
+// TODO: Abstract this difference to its own file
+function getDifferences(specLabels: SpecLabels, issueLabels: IssueLabels) {
+  const differences = {}
+  for (const [label, labelSpec] of Object.entries(specLabels)) {
+    // TODO: Find differences here
   }
 }
 
