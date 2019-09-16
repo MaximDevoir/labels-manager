@@ -1,12 +1,14 @@
-import { Context } from "probot";
-import SpecFiles from "./labels/SpecFiles";
-import SpecLabels, { checkForDuplicates } from "./labels/SpecLabels";
-import IssueLabels from "./labels/IssueLabels";
-import Metrics from "./Metrics";
-import { WebhookPayloadPush } from "@octokit/webhooks";
-import GetIssueLabelTotalCount from "./query/IssueLabelsCount";
-import LabelsError from "./reporter/LabelsError";
-import IssueLabel from "./labels/IssueLabel";
+import { Context, Octokit } from "probot"
+import SpecFiles from "./labels/SpecFiles"
+import SpecLabels, { checkForDuplicates } from "./labels/SpecLabels"
+import IssueLabels from "./labels/IssueLabels"
+import Metrics from "./Metrics"
+import { WebhookPayloadPush } from "@octokit/webhooks"
+import { IssuesUpdateLabelParams, IssuesCreateLabelParams } from "@octokit/rest"
+import GetIssueLabelTotalCount from "./query/IssueLabelsCount"
+import LabelsError from "./reporter/LabelsError"
+import IssueLabel, { IIssueLabel } from "./labels/IssueLabel"
+import { ISpecLabel } from "./labels/SpecLabel"
 
 /**
  * Whether or not the payload is on the `default` branch (usually master)
@@ -83,7 +85,39 @@ class Job {
     await this.specFiles.fetchSpecFiles()
     checkForDuplicates(this)
 
-    const x = getDifferences(this.specLabels, this.issueLabels)
+    const differences = getDifferences(this.specLabels, this.issueLabels)
+
+    const labelSyncs: (ReturnType<Context['github']['issues']['createLabel']>
+      | ReturnType<Context['github']['issues']['updateLabel']>)[] = []
+    for (const [name, [specLabel, isNew, issueLabel]] of Object.entries(differences)) {
+      let label
+      if (isNew === true) {
+        label = this.context.github.issues.createLabel({
+          ...this.context.repo(),
+          ...specLabel,
+          mediaType: {
+            previews: ['symmetra']
+          }
+        } as IssuesCreateLabelParams)
+      } else {
+        const associatedIssueLabel = issueLabel as IIssueLabel
+        label = this.context.github.issues.updateLabel({
+          ...this.context.repo(),
+          current_name: associatedIssueLabel.name,
+          name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
+          ...specLabel,
+          mediaType: {
+            previews: ['symmetra']
+          }
+        } as IssuesUpdateLabelParams)
+      }
+
+      labelSyncs.push(label)
+    }
+
+    await Promise.all(labelSyncs).then(data => {
+      console.log('data', data)
+    })
 
     await this.postSync() // End of method
   }
@@ -91,10 +125,47 @@ class Job {
 
 // TODO: Abstract this difference to its own file
 function getDifferences(specLabels: SpecLabels, issueLabels: IssueLabels) {
-  const differences = {}
-  for (const [label, labelSpec] of Object.entries(specLabels)) {
-    // TODO: Find differences here
+  const differences: {
+    [key: string]: [ISpecLabel, true] | [ISpecLabel, false, IIssueLabel]
+  } = {}
+  for (const [name, specLabelsElements] of Object.entries(specLabels.labels)) {
+    const specLabel = specLabelsElements[0].label.label
+    const issueLabel = issueLabels.getLabel(name)
+
+    if (issueLabel === undefined) {
+      differences[name] = [specLabel, true]
+      continue;
+    }
+
+    const diff = checkDifferences(specLabel, issueLabel)
+    if (diff) {
+      differences[name] = [specLabel, false, issueLabel]
+    }
   }
+
+  console.log('differences', differences)
+  return differences
+}
+
+/**
+ * Checks if `spec` and `issue` labels are out of sync (based on properties from `spec`).
+ *
+ * @param {ISpecLabel} spec
+ * @param {IIssueLabel} [issue]
+ */
+function checkDifferences(spec: ISpecLabel, issue: IIssueLabel) {
+  const differences: Partial<ISpecLabel> = {}
+  for (const [specKey, specValue] of Object.entries(spec)) {
+    if (specValue !== issue[specKey as keyof ISpecLabel]) {
+      differences[specKey as keyof ISpecLabel] = specValue
+    }
+  }
+
+  if (Object.keys(differences).length > 0) {
+    return differences
+  }
+
+  return false
 }
 
 export default Job
