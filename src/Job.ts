@@ -155,9 +155,13 @@ function getDifferences(specLabels: SpecLabels, issueLabels: IssueLabels) {
  */
 function checkDifferences(spec: ISpecLabel, issue: IIssueLabel) {
   const differences: Partial<ISpecLabel> = {}
-  for (const [specKey, specValue] of Object.entries(spec)) {
-    if (specValue !== issue[specKey as keyof ISpecLabel]) {
-      differences[specKey as keyof ISpecLabel] = specValue
+  const keysToCheck: Array<keyof Pick<ISpecLabel, 'name' | 'color' | 'description'>> = ['name', 'color', 'description']
+
+  for (const key of keysToCheck) {
+    const specValue = spec[key]
+    const issueValue = issue[key]
+    if (specValue !== issueValue) {
+      differences[key] = specValue
     }
   }
 
