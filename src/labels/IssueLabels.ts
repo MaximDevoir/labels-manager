@@ -43,6 +43,14 @@ class IssueLabels {
   private addLabel(label: IIssueLabel) {
     this.labels[label.name] = new IssueLabel(label)
   }
+
+  public getLabel(name: string) {
+    if (name in this.labels) {
+      return this.labels[name]['label']
+    }
+
+    return
+  }
 }
 
 export default IssueLabels
