@@ -94,22 +94,16 @@ class Job {
       if (isNew === true) {
         label = this.context.github.issues.createLabel({
           ...this.context.repo(),
-          ...specLabel,
-          mediaType: {
-            previews: ['symmetra']
-          }
-        } as IssuesCreateLabelParams)
+          ...specLabel
+        })
       } else {
         const associatedIssueLabel = issueLabel as IIssueLabel
         label = this.context.github.issues.updateLabel({
           ...this.context.repo(),
           current_name: associatedIssueLabel.name,
           name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
-          ...specLabel,
-          mediaType: {
-            previews: ['symmetra']
-          }
-        } as IssuesUpdateLabelParams)
+          ...specLabel
+        })
       }
 
       labelSyncs.push(label)
