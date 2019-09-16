@@ -1,8 +1,9 @@
 import SpecFile from "./SpecFile";
 
 export interface ISpecLabel {
-  name: string,
-  color: string,
+  name: string
+  color: string
+  aliases: string[]
   description: string
 }
 
