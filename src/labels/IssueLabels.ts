@@ -32,7 +32,10 @@ class IssueLabels {
     await this.checkLabelCount()
     const labels = await this.context.github.paginate(this.context.github.issues.listLabelsForRepo.endpoint.merge({
       ...this.context.repo(),
-      per_page: 100
+      per_page: 100,
+      headers: {
+        accept: 'application/vnd.github.symmetra-preview+json'
+      }
     })) as UnPromisify<ReturnType<Context['github']['issues']['listLabelsForRepo']>>['data']
 
     labels.forEach(label => {
