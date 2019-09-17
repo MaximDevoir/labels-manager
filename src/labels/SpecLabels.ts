@@ -8,6 +8,13 @@ interface SpecLabelsElement {
   file: SpecFile
 }
 
+/**
+ * Checks if any specified labels have been duplicated in different locations.
+ *
+ * Throws and reports any duplicates discovered.
+ *
+ * @param {Job} job
+ */
 export function checkForDuplicates(job: Job) {
   const errorMsg: string[] = []
   for (const [label, specLabels] of Object.entries(job.specLabels.labels)) {
