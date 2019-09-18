@@ -31,7 +31,9 @@ export interface ErrorReport {
    *
    * Defaults to 'neutral' so as not to halt a repository's CI or CD processes.
    *
-   * **Note**: Failure or failure-like conclusions are not supported. See [issue #4](https://github.com/MaximDevoir/probot-labels/issues/4) for more information.
+   * **Note**: Failure or failure-like conclusions are not supported. See [issue
+   * #4](https://github.com/MaximDevoir/probot-labels/issues/4) for more
+   * information.
    */
   conclusion?: Extract<ChecksCreateParams['conclusion'], 'success' | 'neutral'>
 }
@@ -48,7 +50,8 @@ class LabelsError extends Error {
    *
    * @param {Context} context
    * @param {ErrorReport} details
-   * @param {...any[]} privateArgsToLog Extra arguments are logged privately to the server
+   * @param {...any[]} privateArgsToLog Extra arguments are logged privately to
+   * the server
    * @memberof LabelsError
    */
   constructor (public context: Context, public details: ErrorReport, ...privateArgsToLog: any[]) {
