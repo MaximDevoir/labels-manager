@@ -52,6 +52,8 @@ export function checkForDuplicates(job: Job) {
  *    name of an issue label - WHERE the alias is matched to the name of an
  *    issue label.
  *  - (DUPLICATE_ALIAS) The alias is used more than once
+ *  - TODO: (unnamed) More than one of an associated labels aliases match to an
+ *    active issue label name.
  *
  * TODO: Build the alias map during `SpecLabels.addLabelTo` method.
  */
