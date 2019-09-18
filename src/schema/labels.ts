@@ -14,8 +14,11 @@ const labelSchema = Joi.object({
     .required(),// TODO: Validate color
 
   aliases: Joi.array()
-    .items(nameSchema)
+    .items(nameSchema.optional())
+    .unique()
     .optional()
+    .min(0)
+    .max(5)
     .default([]),
 
   description: Joi.string()
