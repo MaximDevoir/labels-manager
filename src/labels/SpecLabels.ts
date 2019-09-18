@@ -129,7 +129,6 @@ export function checkForAliasCollisions(job: Job) {
       const aliasAssocLabel = collision['ACTIVE_ISSUE_NAME'][0]
       collisionAliasMsg.push(
         `The alias and it's associated label name (\`${aliasAssocLabel.label.label.name}\` from \`${aliasAssocLabel.file.fileInfo.path}\`) are both active issue labels.`,
-        `Associated active label name: ${collision['ACTIVE_ISSUE_NAME'][1].name}`,
         ''
       )
     }
