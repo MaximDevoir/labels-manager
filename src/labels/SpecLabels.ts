@@ -55,7 +55,12 @@ export function checkForDuplicates(job: Job) {
  *
  * TODO: Build the alias map during `SpecLabels.addLabelTo` method.
  */
-export function checkForAliasCollisions(spec: SpecLabels, issue: IssueLabels) {
+export function checkForAliasCollisions(job: Job) {
+  const {
+    issueLabels: issue,
+    specLabels: spec
+  } = job
+
   type AliasAssocSpecElement = SpecLabelsElement
   const aliasMap: {
     [key: string]: AliasAssocSpecElement[]
@@ -75,7 +80,7 @@ export function checkForAliasCollisions(spec: SpecLabels, issue: IssueLabels) {
   const collisionMap: {
     [key: string]: Partial<{
       'ACTIVE_SPEC_NAME': SpecLabelsElement[]
-      'ACTIVE_ISSUE_NAME': IIssueLabel
+      'ACTIVE_ISSUE_NAME': [SpecLabelsElement, IIssueLabel]
       'DUPLICATE_ALIAS': SpecLabelsElement[]
     }>
   } = {}
@@ -86,14 +91,17 @@ export function checkForAliasCollisions(spec: SpecLabels, issue: IssueLabels) {
       collisionMap[alias]['DUPLICATE_ALIAS'] = assocSpecLabels
     }
 
-    if (alias in Object.keys(spec.labels)) {
+    if (Object.keys(spec.labels).includes(alias)) {
+      console.log('here')
       collisionMap[alias]['ACTIVE_SPEC_NAME'] = spec.labels[alias]
     }
 
-    if (alias in Object.keys(issue.labels)) {
+    const issueLabelAlias = issue.getLabel(alias)
+    if (issueLabelAlias !== undefined) {
       const aliasAssocLabel = assocSpecLabels[0]
-      if (aliasAssocLabel.label.label.name in Object.keys(issue.labels)) {
-        collisionMap[alias]['ACTIVE_ISSUE_NAME'] = issue.getLabel(alias)
+      const aliasAssocLabelName = aliasAssocLabel.label.label.name
+      if (Object.keys(issue.labels).includes(aliasAssocLabelName)) {
+        collisionMap[alias]['ACTIVE_ISSUE_NAME'] = [aliasAssocLabel, issueLabelAlias]
       }
     }
   }
@@ -101,28 +109,41 @@ export function checkForAliasCollisions(spec: SpecLabels, issue: IssueLabels) {
   const collisionMsg: string[] = []
 
   for (const [alias, collision] of Object.entries(collisionMap)) {
-    collisionMsg.push(`#### Alias \`${alias}\``)
+    const collisionAliasMsg: string[] = []
 
     if (collision['ACTIVE_SPEC_NAME'] && collision['ACTIVE_SPEC_NAME'].length > 0) {
-      collisionMsg.push('The alias is being used as the name of a label in:',
+      collisionAliasMsg.push('The alias is being used as the name of a label in:',
       ...collision['ACTIVE_SPEC_NAME'].map(specElement => {
         return `- ${specElement.file.fileInfo.path}`
-      }))
+      }), '')
     }
 
     if (collision['DUPLICATE_ALIAS'] && collision['DUPLICATE_ALIAS'].length > 0) {
-      collisionMsg.push('The alias is being used in multiple locations"',
+      collisionAliasMsg.push('The alias is being used in multiple locations"',
       ...collision['DUPLICATE_ALIAS'].map(specElement => {
         return `- ${specElement.file.fileInfo.path}`
-      }))
+      }), '')
     }
 
     if (collision['ACTIVE_ISSUE_NAME']) {
-      collisionMsg.push(
-        `The alias and it's associated label are both active issue labels.`,
-        `Associated Active Label: [${collision['ACTIVE_ISSUE_NAME'].name}](${collision['ACTIVE_ISSUE_NAME'].url})`,
+      const aliasAssocLabel = collision['ACTIVE_ISSUE_NAME'][0]
+      collisionAliasMsg.push(
+        `The alias and it's associated label name (\`${aliasAssocLabel.label.label.name}\` from \`${aliasAssocLabel.file.fileInfo.path}\`) are both active issue labels.`,
+        `Associated active label name: ${collision['ACTIVE_ISSUE_NAME'][1].name}`,
+        ''
       )
     }
+
+    if (collisionAliasMsg.length) {
+      collisionMsg.push(`#### Alias \`${alias}\``, ...collisionAliasMsg)
+    }
+  }
+
+  if (collisionMsg.length) {
+    throw new LabelsError(job.context, {
+      title: 'Error: Alias Collision',
+      summary: collisionMsg
+    })
   }
 }
 

@@ -84,7 +84,7 @@ class Job {
     await this.issueLabels.getIssueLabels()
     await this.specFiles.fetchSpecFiles()
     checkForDuplicates(this)
-    checkForAliasCollisions(this.specLabels, this.issueLabels)
+    checkForAliasCollisions(this)
 
     const differences = getDifferences(this.specLabels, this.issueLabels)
 
