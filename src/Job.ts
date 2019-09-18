@@ -1,6 +1,6 @@
 import { Context, Octokit } from "probot"
 import SpecFiles from "./labels/SpecFiles"
-import SpecLabels, { checkForDuplicates } from "./labels/SpecLabels"
+import SpecLabels, { checkForDuplicates, checkForAliasCollisions } from "./labels/SpecLabels"
 import IssueLabels from "./labels/IssueLabels"
 import Metrics from "./Metrics"
 import { WebhookPayloadPush } from "@octokit/webhooks"
@@ -84,6 +84,7 @@ class Job {
     await this.issueLabels.getIssueLabels()
     await this.specFiles.fetchSpecFiles()
     checkForDuplicates(this)
+    checkForAliasCollisions(this.specLabels, this.issueLabels)
 
     const differences = getDifferences(this.specLabels, this.issueLabels)
 
