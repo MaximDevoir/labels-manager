@@ -90,8 +90,31 @@ class Job {
 
     const labelSyncs: (ReturnType<Context['github']['issues']['createLabel']>
       | ReturnType<Context['github']['issues']['updateLabel']>)[] = []
+
+    iterateDifferences:
     for (const [name, [specLabel, isNew, issueLabel]] of Object.entries(differences)) {
+      const aliases = specLabel.aliases
       let label
+
+      for (const index in aliases) {
+        const alias = aliases[index]
+        const aliasIssueLabel = this.issueLabels.getLabel(alias)
+
+        if (aliasIssueLabel) {
+          label = this.context.github.issues.updateLabel({
+            ...this.context.repo(),
+            current_name: aliasIssueLabel.name,
+            name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
+            ...specLabel,
+            mediaType: {
+              previews: ['symmetra']
+            }
+          } as IssuesUpdateLabelParams)
+          labelSyncs.push(label)
+          continue iterateDifferences
+        }
+      }
+
       if (isNew === true) {
         label = this.context.github.issues.createLabel({
           ...this.context.repo(),
