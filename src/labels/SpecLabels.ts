@@ -94,7 +94,6 @@ export function checkForAliasCollisions(job: Job) {
     }
 
     if (Object.keys(spec.labels).includes(alias)) {
-      console.log('here')
       collisionMap[alias]['ACTIVE_SPEC_NAME'] = spec.labels[alias]
     }
 
