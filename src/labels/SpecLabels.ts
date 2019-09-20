@@ -53,7 +53,10 @@ export function checkForDuplicates(job: Job) {
  *    issue label.
  *  - (DUPLICATE_ALIAS) The alias is used more than once
  *  - TODO: (unnamed) More than one of an associated labels aliases match to an
- *    active issue label name.
+ *    active issue label name. Example: Specified label 'bug' has two aliases
+ *    ['bug :bug:', 'app-error']. More than one of the aliases match to an
+ *    active issue label name. This is a collision because we cannot rename both
+ *    labels to the same name.
  *
  * TODO: Build the alias map during `SpecLabels.addLabelTo` method.
  */
