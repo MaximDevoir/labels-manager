@@ -23,7 +23,7 @@
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "parse-json": "^5.0.0",
-    "probot": "^9.3.4",
+    "probot": "^9.5.0",
     "strip-ansi": "^5.2.0"
   },
   "devDependencies": {
