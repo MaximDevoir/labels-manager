@@ -130,7 +130,7 @@ default_permissions:
 name: Labels Manager - Developer Edition
 
 # The homepage of your GitHub App.
-url: https://github.com/MaximDevoir/probot-labels
+url: https://github.com/MaximDevoir/labels-manager
 
 # A description of the GitHub App.
 description: A powerful labels manager for your GitHub repositories.

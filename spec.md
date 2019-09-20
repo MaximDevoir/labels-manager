@@ -1,4 +1,4 @@
-# Probot-Labels Spec
+# Labels Manager Spec
 
 > Unofficial name of app.
 
@@ -9,7 +9,7 @@ Could be called `Labels-Manager`
 
 ## Table of Contents
 
-- [Probot-Labels Spec](#probot-labels-spec)
+- [Labels Manager Spec](#labels-manager-spec)
   - [Table of Contents](#table-of-contents)
   - [What is it](#what-is-it)
   - [File Spec](#file-spec)
@@ -31,7 +31,7 @@ Could be called `Labels-Manager`
 
 ## What is it
 
-Probot-Labels makes managing your project's GitHub labels easy and hassle-free.
+Labels Manager makes managing your project's GitHub labels easy and hassle-free.
 
 ## File Spec
 
