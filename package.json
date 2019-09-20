@@ -16,7 +16,7 @@
     "probot-app"
   ],
   "dependencies": {
-    "@hapi/joi": "^15.1.1",
+    "@hapi/joi": "^16.1.2",
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
