@@ -1,62 +1,9 @@
-{
+export default {
   "event": "push",
   "payload": {
     "ref": "refs/heads/master",
-    "before": "349c3faf5bbdabdb911df00a8b23128cf47ced54",
-    "after": "4356d0a76ccccb8695ee0d9163dab8a5eb26e1c6",
-    "created": false,
-    "deleted": false,
-    "forced": false,
-    "base_ref": null,
-    "compare": "https://github.com/MaximDevoir/labels-manager-testing/compare/349c3faf5bbd...4356d0a76ccc",
-    "commits": [
-      {
-        "id": "4356d0a76ccccb8695ee0d9163dab8a5eb26e1c6",
-        "tree_id": "af94be6907e810ec558b31ab823792f613fea472",
-        "distinct": true,
-        "message": "It's always something",
-        "timestamp": "2019-08-28T03:47:33-07:00",
-        "url": "https://github.com/MaximDevoir/labels-manager-testing/commit/4356d0a76ccccb8695ee0d9163dab8a5eb26e1c6",
-        "author": {
-          "name": "Maxim Devoir",
-          "email": "maximdevoir@gmail.com",
-          "username": "MaximDevoir"
-        },
-        "committer": {
-          "name": "Maxim Devoir",
-          "email": "maximdevoir@gmail.com",
-          "username": "MaximDevoir"
-        },
-        "added": [],
-        "removed": [],
-        "modified": [
-          "README.md"
-        ]
-      }
-    ],
-    "head_commit": {
-      "id": "4356d0a76ccccb8695ee0d9163dab8a5eb26e1c6",
-      "tree_id": "af94be6907e810ec558b31ab823792f613fea472",
-      "distinct": true,
-      "message": "It's always something",
-      "timestamp": "2019-08-28T03:47:33-07:00",
-      "url": "https://github.com/MaximDevoir/labels-manager-testing/commit/4356d0a76ccccb8695ee0d9163dab8a5eb26e1c6",
-      "author": {
-        "name": "Maxim Devoir",
-        "email": "maximdevoir@gmail.com",
-        "username": "MaximDevoir"
-      },
-      "committer": {
-        "name": "Maxim Devoir",
-        "email": "maximdevoir@gmail.com",
-        "username": "MaximDevoir"
-      },
-      "added": [],
-      "removed": [],
-      "modified": [
-        "README.md"
-      ]
-    },
+    "before": "a0534466c082367458822e9296bfed0041d38d4c",
+    "after": "35d44715d6859b11da3f1c43f0830107e0c0fe3f",
     "repository": {
       "id": 204576445,
       "node_id": "MDEwOlJlcG9zaXRvcnkyMDQ1NzY0NDU=",
@@ -126,14 +73,14 @@
       "releases_url": "https://api.github.com/repos/MaximDevoir/labels-manager-testing/releases{/id}",
       "deployments_url": "https://api.github.com/repos/MaximDevoir/labels-manager-testing/deployments",
       "created_at": 1566860611,
-      "updated_at": "2019-08-27T07:01:23Z",
-      "pushed_at": 1566989260,
+      "updated_at": "2019-09-18T22:18:03Z",
+      "pushed_at": 1568849995,
       "git_url": "git://github.com/MaximDevoir/labels-manager-testing.git",
       "ssh_url": "git@github.com:MaximDevoir/labels-manager-testing.git",
       "clone_url": "https://github.com/MaximDevoir/labels-manager-testing.git",
       "svn_url": "https://github.com/MaximDevoir/labels-manager-testing",
       "homepage": null,
-      "size": 27,
+      "size": 69,
       "stargazers_count": 0,
       "watchers_count": 0,
       "language": null,
@@ -182,6 +129,53 @@
     "installation": {
       "id": 1668574,
       "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMTY2ODU3NA=="
+    },
+    "created": false,
+    "deleted": false,
+    "forced": false,
+    "base_ref": null,
+    "compare": "https://github.com/MaximDevoir/labels-manager-testing/compare/a0534466c082...35d44715d685",
+    "commits": [{
+      "id": "35d44715d6859b11da3f1c43f0830107e0c0fe3f",
+      "tree_id": "8c315930b60074a2cfa4337860980ca3b6a6464f",
+      "distinct": true,
+      "message": "Added another line",
+      "timestamp": "2019-09-18T16:39:50-07:00",
+      "url": "https://github.com/MaximDevoir/labels-manager-testing/commit/35d44715d6859b11da3f1c43f0830107e0c0fe3f",
+      "author": {
+        "name": "Maxim Devoir",
+        "email": "maximdevoir@gmail.com",
+        "username": "MaximDevoir"
+      },
+      "committer": {
+        "name": "Maxim Devoir",
+        "email": "maximdevoir@gmail.com",
+        "username": "MaximDevoir"
+      },
+      "added": [],
+      "removed": [],
+      "modified": ["README.md"]
+    }],
+    "head_commit": {
+      "id": "35d44715d6859b11da3f1c43f0830107e0c0fe3f",
+      "tree_id": "8c315930b60074a2cfa4337860980ca3b6a6464f",
+      "distinct": true,
+      "message": "Added another line",
+      "timestamp": "2019-09-18T16:39:50-07:00",
+      "url": "https://github.com/MaximDevoir/labels-manager-testing/commit/35d44715d6859b11da3f1c43f0830107e0c0fe3f",
+      "author": {
+        "name": "Maxim Devoir",
+        "email": "maximdevoir@gmail.com",
+        "username": "MaximDevoir"
+      },
+      "committer": {
+        "name": "Maxim Devoir",
+        "email": "maximdevoir@gmail.com",
+        "username": "MaximDevoir"
+      },
+      "added": [],
+      "removed": [],
+      "modified": ["README.md"]
     }
   }
 }
