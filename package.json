@@ -16,7 +16,7 @@
     "probot-app"
   ],
   "dependencies": {
-    "@hapi/joi": "^16.1.2",
+    "@hapi/joi": "^16.1.4",
     "@probot/serverless-lambda": "^0.3.0",
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.13.1",
@@ -33,10 +33,10 @@
     "@types/jsonwebtoken": "^8.3.4",
     "@types/nock": "^11.1.0",
     "@types/node": "^12.7.2",
-    "@types/node-fetch": "^2.5.1",
+    "@types/node-fetch": "^2.5.2",
     "@types/parse-json": "^4.0.0",
-    "@typescript-eslint/eslint-plugin": "^2.3.0",
-    "@typescript-eslint/parser": "^2.3.0",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "eslint": "6.4.0",
     "eslint-plugin-import": "^2.18.2",
     "jest": "^24.9.0",
