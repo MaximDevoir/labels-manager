@@ -1,3 +1,5 @@
+org: maximdevoir
+app: labels-manager
 service:
   name: labels-manager
 
