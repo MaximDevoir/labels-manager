@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "@hapi/joi": "^16.1.2",
+    "@probot/serverless-lambda": "^0.3.0",
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
