@@ -19,3 +19,6 @@ typings/
 
 # Testing related directories
 coverage/
+
+# Serverless
+.serverless
