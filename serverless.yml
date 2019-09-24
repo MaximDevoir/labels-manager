@@ -14,7 +14,7 @@ provider:
     PRIVATE_KEY_PATH: ${env:PRIVATE_KEY_PATH}
 
 functions:
-  router:
+  sync:
     handler: dist/serverless_handler.main
     memorySize: 128 # Overwrite the default memory size. Default is 1024
     timeout: 10 # The default is 3 seconds. Note: API Gateway current maximum is 30 seconds
