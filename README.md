@@ -31,3 +31,13 @@ permissions are updated without a reason specified.
 > Enterprise Server.
 
 [GitHub Developer Program](https://developer.github.com/program/)
+
+## Cutting a Release
+
+### Environment Variables
+
+The required environment variables are: ...
+
+Incomplete steps
+
+`NODE_ENV=production serverless deploy`
