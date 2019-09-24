@@ -36,6 +36,11 @@ export interface ErrorReport {
    * information.
    */
   conclusion?: Extract<ChecksCreateParams['conclusion'], 'success' | 'neutral'>
+
+  /**
+   * Whether or not to throw after the check is created
+   */
+  throwAfterReport?: boolean
 }
 
 /**
@@ -45,6 +50,8 @@ export interface ErrorReport {
  * @extends {Error}
  */
 class LabelsError extends Error {
+  public checkCreation: ReturnType<Context['github']['checks']['create']>
+  public throwAfterReport: boolean
   /**
    * Report an error as a `check` on the repository.
    *
@@ -63,7 +70,7 @@ class LabelsError extends Error {
 
     this.name = 'LabelsError'
     this.context.log.error(`Extra logs for (summary): ${details.summary}\n\n`, ...privateArgsToLog)
-
+    this.throwAfterReport = details.throwAfterReport || true
     const {
       after: commitSha,
       repository: {
@@ -85,7 +92,7 @@ class LabelsError extends Error {
       '</sup>'
     ]
 
-    context.github.checks.create({
+    this.checkCreation = context.github.checks.create({
       owner,
       repo,
       name: 'Labels Manager',
@@ -97,6 +104,14 @@ class LabelsError extends Error {
         summary: printLines(details.summary),
         text: printLines(details.text || 'No more information provided.') + '\n' + printLines(debugInformation) + '\n' + printLines(reportFooter)
       }
+    })
+    .then(response => {
+      this.context.log('Report logged')
+      if (this.throwAfterReport === true) {
+        throw this
+      }
+
+      return response
     })
   }
 }
