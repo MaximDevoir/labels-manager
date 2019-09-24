@@ -57,6 +57,10 @@ class LabelsError extends Error {
   constructor (public context: Context, public details: ErrorReport, ...privateArgsToLog: any[]) {
     super(printLines(details.summary))
 
+    // Explicitly set the prototype
+    // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, LabelsError.prototype)
+
     this.name = 'LabelsError'
     this.context.log.error(`Extra logs for (summary): ${details.summary}\n\n`, ...privateArgsToLog)
 
