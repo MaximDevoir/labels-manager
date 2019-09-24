@@ -11,6 +11,7 @@ provider:
   runtime: nodejs10.x
   region: ${opt:region, 'us-west-2'} # Overwrite the default region used. Default is us-east-1 (N. Virginia)
   logRetentionInDays: 14 # Set the default RetentionInDays for a CloudWatch LogGroup
+  cfnRole: ${env:CFN_ROLE}
   environment:
     APP_ID: ${env:APP_ID}
     WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
