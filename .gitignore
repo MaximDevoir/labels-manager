@@ -22,3 +22,6 @@ coverage/
 
 # Serverless
 .serverless
+
+# Production keys
+*.pem
