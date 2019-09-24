@@ -3,6 +3,9 @@ app: labels-manager
 service:
   name: labels-manager
 
+plugins:
+  - serverless-dotenv-plugin
+
 provider:
   name: aws
   runtime: nodejs10.x

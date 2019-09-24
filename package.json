@@ -43,6 +43,7 @@
     "nock": "^11.3.5",
     "nodemon": "^1.19.1",
     "rimraf": "^3.0.0",
+    "serverless-dotenv-plugin": "^2.1.1",
     "smee-client": "^1.1.0",
     "ts-jest": "^24.0.2",
     "tsc-watch": "^4.0.0",
