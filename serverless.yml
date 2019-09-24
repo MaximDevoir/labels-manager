@@ -26,4 +26,4 @@ functions:
     events:
       - http:
           path: /sync
-        method: post
+          method: post
