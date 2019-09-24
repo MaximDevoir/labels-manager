@@ -22,5 +22,5 @@ functions:
       LOG_FORMAT: json
     events:
       - http:
-        path: /
+          path: /sync
         method: post
