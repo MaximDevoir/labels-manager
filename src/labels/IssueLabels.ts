@@ -43,13 +43,25 @@ class IssueLabels {
     })
   }
 
+  /**
+   * Converts the name of a label to a valid identity token by converting the
+   * characters to lower case.
+   *
+   * @param name The name of the label
+   */
+  public static convertNameToIdentityToken(name: string): string {
+    return name.toLowerCase()
+  }
+
   private addLabel(label: IIssueLabel) {
-    this.labels[label.name] = new IssueLabel(label)
+    const labelID = IssueLabels.convertNameToIdentityToken(label.name)
+    this.labels[labelID] = new IssueLabel(label)
   }
 
   public getLabel(name: string) {
-    if (name in this.labels) {
-      return this.labels[name]['label']
+    const labelID = IssueLabels.convertNameToIdentityToken(name)
+    if (labelID in this.labels) {
+      return this.labels[labelID]['label']
     }
 
     return

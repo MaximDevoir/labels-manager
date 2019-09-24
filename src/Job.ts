@@ -92,7 +92,7 @@ class Job {
       | ReturnType<Context['github']['issues']['updateLabel']>)[] = []
 
     iterateDifferences:
-    for (const [name, [specLabel, isNew, issueLabel]] of Object.entries(differences)) {
+    for (const [labelID, [specLabel, isNew, issueLabel]] of Object.entries(differences)) {
       const aliases = specLabel.aliases
       let label
 
@@ -100,11 +100,12 @@ class Job {
         const alias = aliases[index]
         const aliasIssueLabel = this.issueLabels.getLabel(alias)
 
+        // The alias exists, rename it.
         if (aliasIssueLabel) {
           label = this.context.github.issues.updateLabel({
             ...this.context.repo(),
             current_name: aliasIssueLabel.name,
-            name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
+            name: specLabel.name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
             ...specLabel,
             mediaType: {
               previews: ['symmetra']
@@ -128,7 +129,7 @@ class Job {
         label = this.context.github.issues.updateLabel({
           ...this.context.repo(),
           current_name: associatedIssueLabel.name,
-          name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
+          name: specLabel.name, //name is required for `updateLabel`. See https://github.com/octokit/rest.js/issues/1464
           ...specLabel,
           mediaType: {
             previews: ['symmetra']
@@ -150,20 +151,21 @@ class Job {
 // TODO: Abstract this difference to its own file
 function getDifferences(specLabels: SpecLabels, issueLabels: IssueLabels) {
   const differences: {
+    // Key is a label ID
     [key: string]: [ISpecLabel, true] | [ISpecLabel, false, IIssueLabel]
   } = {}
-  for (const [name, specLabelsElements] of Object.entries(specLabels.labels)) {
+  for (const [labelID, specLabelsElements] of Object.entries(specLabels.labels)) {
     const specLabel = specLabelsElements[0].label.label
-    const issueLabel = issueLabels.getLabel(name)
+    const issueLabel = issueLabels.getLabel(labelID)
 
     if (issueLabel === undefined) {
-      differences[name] = [specLabel, true]
+      differences[labelID] = [specLabel, true]
       continue;
     }
 
     const diff = checkDifferences(specLabel, issueLabel)
     if (diff) {
-      differences[name] = [specLabel, false, issueLabel]
+      differences[labelID] = [specLabel, false, issueLabel]
     }
   }
 

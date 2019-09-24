@@ -19,18 +19,14 @@ interface SpecLabelsElement {
  */
 export function checkForDuplicates(job: Job) {
   const errorMsg: string[] = []
-  for (const [label, specLabels] of Object.entries(job.specLabels.labels)) {
+  for (const [labelID, specLabels] of Object.entries(job.specLabels.labels)) {
     if (specLabels.length <= 1) {
       continue
     }
 
-    const declaredFiles = specLabels.map(specLabel => {
-      return `\`${specLabel.file.fileInfo.path}\``
-    })
-
     errorMsg.push(...[
-      `Duplicate entries for the label \`${label}\` discovered in:`,
-      ...declaredFiles.map(file => `- \`${file}\``),
+      `Duplicate entries for the label \`${labelID}\` discovered in:`,
+      ...specLabels.map(specElement => `- \`${specElement.file.fileInfo.path}\` as \`${specElement.label.label.name}\``),
       ''
     ])
   }
@@ -71,13 +67,14 @@ export function checkForAliasCollisions(job: Job) {
     [key: string]: AliasAssocSpecElement[]
   } = {}
 
-  spec.iterateLabels((label, spec) => {
+  spec.iterateLabels((labelID, spec) => {
     const { aliases } = spec.label.label
     aliases.forEach(alias => {
-      if (!(alias in aliasMap)) {
-        aliasMap[alias] = [spec]
+      const aliasID = IssueLabels.convertNameToIdentityToken(alias)
+      if (!(aliasID in aliasMap)) {
+        aliasMap[aliasID] = [spec]
       } else {
-        aliasMap[alias].push(spec)
+        aliasMap[aliasID].push(spec)
       }
     })
   })
@@ -89,23 +86,23 @@ export function checkForAliasCollisions(job: Job) {
       'DUPLICATE_ALIAS': SpecLabelsElement[]
     }>
   } = {}
-  for (const [alias, assocSpecLabels] of Object.entries(aliasMap)) {
-    collisionMap[alias] = {}
+  for (const [aliasID, assocSpecLabels] of Object.entries(aliasMap)) {
+    collisionMap[aliasID] = {}
 
     if (assocSpecLabels.length > 1) {
-      collisionMap[alias]['DUPLICATE_ALIAS'] = assocSpecLabels
+      collisionMap[aliasID]['DUPLICATE_ALIAS'] = assocSpecLabels
     }
 
-    if (Object.keys(spec.labels).includes(alias)) {
-      collisionMap[alias]['ACTIVE_SPEC_NAME'] = spec.labels[alias]
+    if (Object.keys(spec.labels).includes(aliasID)) {
+      collisionMap[aliasID]['ACTIVE_SPEC_NAME'] = spec.labels[aliasID]
     }
 
-    const issueLabelAlias = issue.getLabel(alias)
+    const issueLabelAlias = issue.getLabel(aliasID)
     if (issueLabelAlias !== undefined) {
       const aliasAssocLabel = assocSpecLabels[0]
       const aliasAssocLabelName = aliasAssocLabel.label.label.name
       if (Object.keys(issue.labels).includes(aliasAssocLabelName)) {
-        collisionMap[alias]['ACTIVE_ISSUE_NAME'] = [aliasAssocLabel, issueLabelAlias]
+        collisionMap[aliasID]['ACTIVE_ISSUE_NAME'] = [aliasAssocLabel, issueLabelAlias]
       }
     }
   }
@@ -176,11 +173,13 @@ class SpecLabels {
   }
 
   private addLabelTo(name: string, label: SpecLabelsElement) {
-    if (!(name in this._labels)) {
-      this._labels[name] = []
+    const labelID = IssueLabels.convertNameToIdentityToken(name)
+
+    if (!(labelID in this._labels)) {
+      this._labels[labelID] = []
     }
 
-    this._labels[name].push(label)
+    this._labels[labelID].push(label)
   }
 
   get labels() {
@@ -191,10 +190,10 @@ class SpecLabels {
    * Iterate over each spec labels element.
    * @param iteratee
    */
-  iterateLabels(iteratee: (label: string, spec: SpecLabelsElement) => void) {
-    for (const [label, specLabels] of Object.entries(this.labels)) {
+  iterateLabels(iteratee: (labelID: string, spec: SpecLabelsElement) => void) {
+    for (const [labelID, specLabels] of Object.entries(this.labels)) {
       specLabels.forEach(spec => {
-        iteratee(label, spec)
+        iteratee(labelID, spec)
       })
     }
   }
