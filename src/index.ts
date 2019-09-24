@@ -34,7 +34,7 @@ export = (app: Application): void => {
       )
     } finally {
       // Attempts to log metrics if not already logged. This will miss any resource costs incurred during the `catch` phase.
-      job.endMetrics()
+      await job.endMetrics()
     }
   })
 
