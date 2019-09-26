@@ -6,6 +6,7 @@
     "build:clean": "rimraf ./dist/ && rimraf ./typings/",
     "dev:nodemon": "echo \"-------DEPRECATION NOTICE-------\nThis command is deprecated. Please use the 'dev' script\" && exit 1 && nodemon --exec \"npm run build && npm start\"",
     "dev": "npm run build:clean && tsc-watch --onSuccess \"npm start\" --onFailure \"echo Compilation Failed\"",
+    "deploy": "yarn run build && NODE_ENV=production serverless deploy",
     "start": "probot run ./dist/index.js",
     "lint": "eslint **/*.ts",
     "test": "jest",
