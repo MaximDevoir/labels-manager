@@ -40,4 +40,6 @@ The required environment variables are: ...
 
 Incomplete steps
 
+`yarn run build`
+
 `NODE_ENV=production serverless deploy`
