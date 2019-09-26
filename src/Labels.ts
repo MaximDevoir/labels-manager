@@ -139,7 +139,7 @@ export default class Labels {
     const { totalCount: repoLabelCount } = labels.repository.labels
 
     if (repoLabelCount > this.limit) {
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'Repository exceeds label limit.',
         summary: [`This repository contains ${repoLabelCount} labels - more than the ${this.limit} label limit.`]
       })

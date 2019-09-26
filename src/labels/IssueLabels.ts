@@ -21,7 +21,7 @@ class IssueLabels {
     const issuesLabelLimit = 256
 
     if (issuesLabelTotalCount > issuesLabelLimit) {
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'Repository exceeds label limit.',
         summary: [`This repository contains ${issuesLabelTotalCount} labels - more than the ${issuesLabelLimit} label limit.`]
       })

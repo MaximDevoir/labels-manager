@@ -1,4 +1,4 @@
-import { Variables, Headers, GraphQlQueryResponse, GraphQLError } from 'probot/lib/github'
+import { Variables } from 'probot/lib/github'
 import { Context } from 'probot';
 
 import LabelsError from './../reporter/LabelsError'
@@ -25,14 +25,13 @@ class Query<IResponse> {
     const response = graphql(this.query, this.variables)
 
     response.catch(res => {
-      // TODO: Securely log errors and remove variables.
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'Error: Encountered an error with a query.',
         summary: 'Encountered an error while executing a query.',
         text: [
           'If this error persists, the app may be experiencing a bug.'
         ]
-      })
+      }, res)
     })
 
     // According to the Octokit/graphql response, it is possible for the
@@ -40,7 +39,7 @@ class Query<IResponse> {
     // throw an error if that happens.
     const responseData = response.then(res => {
       if (res == null) {
-        throw new LabelsError(this.context, {
+        throw new LabelsError({
           title: 'Internal Error: Unexpected query response (null)',
           summary: 'Unexpected query response (null)',
           text: [

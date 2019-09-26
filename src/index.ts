@@ -16,12 +16,12 @@ export = (app: Application): void => {
       if (recognizedErrors.includes(errorName)) {
         if (e instanceof LabelsError) {
           e.throwAfterReport = false
-          await e.checkCreation
+          await e.report(context)
         } else {
           throw e
         }
       } else {
-        new LabelsError(context, {
+        const unexpectedError = new LabelsError({
           title: 'Unhandled Error Encountered',
           summary: [
             'The application encountered an unhandled error.'
@@ -34,9 +34,10 @@ export = (app: Application): void => {
         },
         'error', e,
         '#### Error Stack',
-        ...(typeof e.stack === 'string' ? ['```', e.stack, '```'] : ['No stack available', `Stack is \`${typeof e.stack}\``]),
-
+        ...(typeof e.stack === 'string' ? ['```', e.stack, '```'] : ['No stack available', `Stack is \`${typeof e.stack}\``])
         )
+
+        await unexpectedError.report(context)
       }
     } finally {
       context.log('Finally...')

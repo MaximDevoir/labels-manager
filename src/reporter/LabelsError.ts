@@ -50,18 +50,18 @@ export interface ErrorReport {
  * @extends {Error}
  */
 class LabelsError extends Error {
-  public checkCreation: ReturnType<Context['github']['checks']['create']>
+  // public checkCreation: ReturnType<Context['github']['checks']['create']>
+  public privateArgsToLog: any[]
   public throwAfterReport: boolean
   /**
    * Report an error as a `check` on the repository.
    *
-   * @param {Context} context
    * @param {ErrorReport} details
    * @param {...any[]} privateArgsToLog Extra arguments are logged privately to
    * the server
    * @memberof LabelsError
    */
-  constructor (public context: Context, public details: ErrorReport, ...privateArgsToLog: any[]) {
+  constructor (public details: ErrorReport, ...privateArgsToLog: any[]) {
     super(printLines(details.summary))
 
     // Explicitly set the prototype
@@ -69,8 +69,13 @@ class LabelsError extends Error {
     Object.setPrototypeOf(this, LabelsError.prototype)
 
     this.name = 'LabelsError'
-    this.context.log.error(`Extra logs for (summary): ${details.summary}\n\n`, ...privateArgsToLog)
     this.throwAfterReport = details.throwAfterReport || true
+    this.privateArgsToLog = privateArgsToLog
+  }
+
+  report(context: Context): ReturnType<Context['github']['checks']['create']> {
+    context.log.error(`Extra logs for (summary): ${this.details.summary}\n\n`, ...this.privateArgsToLog)
+
     const {
       after: commitSha,
       repository: {
@@ -92,27 +97,29 @@ class LabelsError extends Error {
       '</sup>'
     ]
 
-    this.checkCreation = context.github.checks.create({
+    const createCheck = context.github.checks.create({
       owner,
       repo,
       name: 'Labels Manager',
       head_sha: commitSha,
-      conclusion: details.conclusion || 'neutral',
+      conclusion: this.details.conclusion || 'neutral',
       status: 'completed',
       output: {
-        title: details.title || 'Labels Manager',
-        summary: printLines(details.summary),
-        text: printLines(details.text || 'No more information provided.') + '\n' + printLines(debugInformation) + '\n' + printLines(reportFooter)
+        title: this.details.title || 'Labels Manager',
+        summary: printLines(this.details.summary),
+        text: printLines(this.details.text || 'No more information provided.') + '\n' + printLines(debugInformation) + '\n' + printLines(reportFooter)
       }
     })
     .then(response => {
-      this.context.log('Report logged')
+      context.log('Report logged')
       if (this.throwAfterReport === true) {
         throw this
       }
 
       return response
     })
+
+    return createCheck
   }
 }
 

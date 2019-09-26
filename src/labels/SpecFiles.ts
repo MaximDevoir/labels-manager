@@ -58,7 +58,7 @@ class SpecFiles {
       }) as GetContentsResponse
 
       if (!Array.isArray(dirContents.data)) {
-        throw new LabelsError(this.context, {
+        throw new LabelsError({
           title: 'Unable to scan labels directory',
           summary: 'Bad labels directory',
           text: [
@@ -75,7 +75,7 @@ class SpecFiles {
        */
       const maxFilesInDirectory = 30
       if (dirContents.data.length >= maxFilesInDirectory) {
-        throw new LabelsError(this.context, {
+        throw new LabelsError({
           title: 'Too many files in labels directory',
           summary: [
             `There are too many files in \`${labelsDirectory}\`. The labels directory cannot exceed ${maxFilesInDirectory} files.`,
@@ -103,7 +103,7 @@ class SpecFiles {
         throw err
       }
 
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'No Labels Discovered',
         summary: 'No labels discovered in the repository.',
         text: [
@@ -148,7 +148,7 @@ class SpecFiles {
     })
 
     if (specErrors.length) {
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'Invalid Label Setup',
         summary: [
           'Please fix the errors described below.',

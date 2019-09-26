@@ -47,7 +47,7 @@ class SpecFile {
       response = await fetch(this.fileInfo.download_url)
       content = await response.text()
     } catch (err) {
-      throw new LabelsError(this.context, {
+      throw new LabelsError({
         title: 'Unable to download label configuration',
         summary: [
           `Unable to download label configuration for \`${this.fileInfo.name}\``

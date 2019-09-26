@@ -32,7 +32,7 @@ export function checkForDuplicates(job: Job) {
   }
 
   if (errorMsg.length) {
-    throw new LabelsError(job.context, {
+    throw new LabelsError({
       title: 'Duplicate label entries',
       summary: errorMsg
     })
@@ -140,7 +140,7 @@ export function checkForAliasCollisions(job: Job) {
   }
 
   if (collisionMsg.length) {
-    throw new LabelsError(job.context, {
+    throw new LabelsError({
       title: 'Error: Alias Collision',
       summary: collisionMsg
     })
