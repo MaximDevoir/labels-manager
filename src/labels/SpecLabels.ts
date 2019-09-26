@@ -187,6 +187,21 @@ class SpecLabels {
   }
 
   /**
+   * TODO: Deduplicate. This function is similar to one in `IssueLabels.ts`.
+   */
+  checkLabelCount() {
+    const specLabelLimit = 256
+    const specLabelTotalCount = Object.entries(this.labels).length
+
+    if (specLabelTotalCount > specLabelLimit) {
+      throw new LabelsError({
+        title: 'Repository exceeds label limit.',
+        summary: [`This repository specifies ${specLabelTotalCount} labels - more than the ${specLabelLimit} label limit.`]
+      })
+    }
+  }
+
+  /**
    * Iterate over each spec labels element.
    * @param iteratee
    */

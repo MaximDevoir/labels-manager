@@ -81,6 +81,7 @@ class Job {
 
     await this.issueLabels.getIssueLabels()
     await this.specFiles.fetchSpecFiles()
+    this.specLabels.checkLabelCount()
     checkForDuplicates(this)
     checkForAliasCollisions(this)
 
