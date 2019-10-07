@@ -32,7 +32,7 @@ export interface ErrorReport {
    * Defaults to 'neutral' so as not to halt a repository's CI or CD processes.
    *
    * **Note**: Failure or failure-like conclusions are not supported. See [issue
-   * #4](https://github.com/MaximDevoir/probot-labels/issues/4) for more
+   * #4](https://github.com/MaximDevoir/labels-manager/issues/4) for more
    * information.
    */
   conclusion?: Extract<ChecksCreateParams['conclusion'], 'success' | 'neutral'>
@@ -93,7 +93,7 @@ class LabelsError extends Error {
 
     const reportFooter = [
       '<sup>',
-      'If this error persists, consider [raising an issue](https://github.com/MaximDevoir/probot-labels/issues).',
+      'If this error persists, consider [raising an issue](https://github.com/MaximDevoir/labels-manager/issues).',
       '</sup>'
     ]
 

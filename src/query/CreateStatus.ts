@@ -22,7 +22,7 @@ class CreateStatus {
     {
       state,
       description,
-      target_url = 'https://github.com/MaximDevoir/probot-labels',
+      target_url = 'https://github.com/MaximDevoir/labels-manager',
       context = "labels-manager"
     }: StatusParameters
   ) {
