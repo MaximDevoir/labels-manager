@@ -1,6 +1,7 @@
 # Labels Manager
 
-Labels Manager makes managing your project's GitHub labels easy and hassle-free.
+> Labels Manager makes managing your project's GitHub labels easy and
+> hassle-free.
 
 ## Useful Developer Resources
 
