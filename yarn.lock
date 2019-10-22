@@ -462,10 +462,10 @@
   resolved "https://registry.npmjs.org/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
 
-"@types/hapi__joi@^16.0.1":
-  version "16.0.1"
-  resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-16.0.1.tgz#ec227341ec7ce2091066cccebc3b14f6c527ba6b"
-  integrity sha512-U4I9Pfk4qH6TCXlg55qOc3F730QndZi86hGWlZHPHY7b3J+MCDIAO6EejbkaLWk7U15v+jn2J3GRVKD4ruhS2Q==
+"@types/hapi__joi@^16.0.2":
+  version "16.0.2"
+  resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-16.0.2.tgz#28dbc647c4fcf736403ad21c30668e3ecf4c19de"
+  integrity sha512-mBJ70SvfnlmeVNRiq34M0FwZ0xkFwwLN2eQkneT2DStDITKiWEV4ycE2Muq0PavBj+pc8wVtxpJwAR+YAMIplg==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
