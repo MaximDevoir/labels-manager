@@ -33,7 +33,7 @@
     "@types/jest": "^24.0.19",
     "@types/jsonwebtoken": "^8.3.5",
     "@types/nock": "^11.1.0",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.11.2",
     "@types/node-fetch": "^2.5.2",
     "@types/parse-json": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
