@@ -26,7 +26,7 @@
     "node-fetch": "^2.6.0",
     "parse-json": "^5.0.0",
     "probot": "^9.6.5",
-    "strip-ansi": "^5.2.0"
+    "strip-ansi": "^6.0.0"
   },
   "devDependencies": {
     "@types/hapi__joi": "^16.0.3",
