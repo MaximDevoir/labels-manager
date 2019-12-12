@@ -42,7 +42,7 @@
     "eslint-plugin-import": "^2.19.1",
     "jest": "^24.9.0",
     "nock": "^11.7.0",
-    "nodemon": "^2.0.1",
+    "nodemon": "^2.0.2",
     "rimraf": "^3.0.0",
     "serverless-dotenv-plugin": "^2.1.1",
     "smee-client": "^1.1.0",
