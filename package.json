@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/hapi__joi": "^16.0.4",
-    "@types/jest": "^24.0.24",
+    "@types/jest": "^24.0.25",
     "@types/jsonwebtoken": "^8.3.5",
     "@types/nock": "^11.1.0",
     "@types/node": "^13.1.1",
