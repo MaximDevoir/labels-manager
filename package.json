@@ -40,13 +40,13 @@
     "@typescript-eslint/parser": "^2.22.0",
     "eslint": "6.8.0",
     "eslint-plugin-import": "^2.20.1",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "nock": "^11.8.2",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
     "serverless-dotenv-plugin": "^2.3.2",
     "smee-client": "^1.1.0",
-    "ts-jest": "^24.3.0",
+    "ts-jest": "^25.2.1",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   }
