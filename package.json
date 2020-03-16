@@ -17,7 +17,7 @@
     "probot-app"
   ],
   "dependencies": {
-    "@hapi/joi": "^17.1.0",
+    "@hapi/joi": "^17.1.1",
     "@probot/serverless-lambda": "^0.5.0",
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.13.1",
