@@ -22,7 +22,7 @@
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.13.1",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.25.0",
+    "moment": "^2.25.3",
     "node-fetch": "^2.6.0",
     "parse-json": "^5.0.0",
     "probot": "^9.11.3",
