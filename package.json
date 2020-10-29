@@ -18,14 +18,14 @@
   ],
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "@probot/serverless-lambda": "^0.5.0",
+    "@probot/serverless-lambda": "^0.5.3",
     "hex-color-regex": "^1.1.0",
     "js-yaml": "^3.14.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "parse-json": "^5.1.0",
-    "probot": "^9.15.1",
+    "probot": "^10.10.0",
     "strip-ansi": "^6.0.0"
   },
   "devDependencies": {
