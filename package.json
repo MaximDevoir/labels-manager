@@ -34,7 +34,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/nock": "^11.1.0",
     "@types/node": "^13.13.5",
-    "@types/node-fetch": "^2.5.7",
+    "@types/node-fetch": "^2.5.8",
     "@types/parse-json": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
