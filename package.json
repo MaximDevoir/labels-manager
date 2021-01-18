@@ -24,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
-    "parse-json": "^5.1.0",
+    "parse-json": "^5.2.0",
     "probot": "^9.15.1",
     "strip-ansi": "^6.0.0"
   },
